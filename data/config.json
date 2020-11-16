@@ -1,0 +1,64 @@
+{
+  "enter": "free",
+  "title": {
+    "header": "平阳电子商务局",
+    "subhead": "智慧城市",
+    "footer": "平阳"
+  },
+  "assets": {
+    "path": "data",
+    "db": "ccs.db",
+    "host": [
+      "localhost",
+      5000
+    ]
+  },
+  "tables": {
+    "history": {
+      "name": "screen",
+      "column": {
+        "year": "integer",
+        "date": "text",
+        "info": "text not null",
+        "ImagePath": "text"
+      },
+      "detail": {
+        "name": "detail",
+        "column_name": "images",
+        "foreign": "screen",
+        "column": {
+          "name": "text",
+          "path": "text"
+        }
+      }
+    }
+  },
+  "routes": {
+    "history": {
+      "title": "大事记",
+      "url": "/history",
+      "name": "history",
+      "index": "common/index.html",
+      "detail": "common/detail.html"
+    },
+    "news": {
+      "title": "新闻",
+      "url": "/news",
+      "item": [
+        {
+          "title": "国际",
+          "url": "/news/international",
+          "name": "international"
+        },
+        {
+          "title": "国内",
+          "url": "/news/inland"
+        }
+      ]
+    },
+    "toJson": {
+      "title": "同步",
+      "url": "#"
+    }
+  }
+}

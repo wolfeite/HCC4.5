@@ -1,0 +1,151 @@
+{% extends "templates/layout.html" %}
+{% block css %}
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/ionicons.min.css') }}">
+    <!-- jsGrid -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/jsgrid/jsgrid.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/jsgrid/jsgrid-theme.min.css') }}">
+
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <style>
+        .pt-2, .py-2 {
+            padding-top: .2rem !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ced4da;
+        }
+
+        .pt-2.px-3 .input-group {
+            display: flex;
+            flex-direction: row;
+            width: 150px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    {% from "templates/input.html" import input %}
+    <!-- Main content -->
+    <section class="content">
+        <div id="infoEl" style="display:none;" info="{{ get_flashed_messages(category_filter=type)[0] }}"
+             path="{{ path }}" screen="{{ related }}"></div>
+        <div class="col-12 col-sm-12">
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                        <li class="pt-2 px-3">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-block btn-default btn-sm" id="addBtn"
+                                        data-toggle="modal" data-target="#addModal"><i class="fas fa-plus"></i>
+                                    图片
+                                </button>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill"
+                               href="#custom-tabs-four-home" role="tab" aria-controls="screen"
+                               aria-selected="true">列表</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                        <div class="tab-pane fade show active" id="screen" role="tabpanel"
+                             aria-labelledby="custom-tabs-four-home-tab">
+                            <div id="contentList"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+    {% from "templates/operateModal.html" import addModal,updateModal,delModal %}
+    {% macro formModal(prefix="_") %}
+        <form role="form" action="#" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="id" value=""/>
+            <input type="hidden" name="route" value=""/>
+            <input type="hidden" name="screen" value=""/>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">序号*：</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="请输入，示例1" value="" name="number">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">名字：</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="请输入" value="" name="name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">图片：</label>
+                    <div class="input-group col-sm-9">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="path" accept="image/*">
+                            {#                            <label class="custom-file-label">{{ info.video if info.video else "选择视频" }}</label>#}
+                            <label class="custom-file-label">{{ "选择图片" }}</label>
+                        </div>
+                    </div>
+                    <img src="" name="preImage" alt="" style="display: none;height:200px;margin: 16px auto 0px;">
+                </div>
+            </div>
+        </form>
+    {% endmacro %}
+
+    {% call addModal() %}
+        {{ formModal("add_") }}
+    {% endcall %}
+    {% call updateModal() %}
+        {{ formModal("update_") }}
+    {% endcall %}
+    {% call delModal() %}
+        <p>确定删除该信息？</p>
+        <form role="form" action="#" enctype="multipart/form-data" method="post" style="display:none">
+            <input type="hidden" name="id" value=""/>
+            <input type="hidden" name="route" value=""/>
+            <input type="hidden" name="screen" value=""/>
+        </form>
+    {% endcall %}
+
+{% endblock %}
+{% block js %}
+    <!-- bs-custom-file-input -->
+    <script src="{{ url_for('static',filename='plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+
+    <!-- jsGrid -->
+    <script src="{{ url_for('static',filename='plugins/jsgrid/demos/db.js') }}"></script>
+    <script src="{{ url_for('static',filename='plugins/jsgrid/jsgrid.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='plugins/jsgrid/jsgrid-zh-cn.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ url_for('static',filename='plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='app/common.js') }}"></script>
+    <script>
+        var infoEl = $("#infoEl"), prefix = infoEl.attr("path"), screen = infoEl.attr("screen")
+        var url = {
+            list: prefix + "list",
+            add: prefix + "add",
+            update: prefix + "update",
+            del: prefix + "del"
+        }
+        var columns = [
+            {name: "id", type: "number", width: 30, align: "left", title: "ID", visible: false},
+            {name: "route", type: "text", width: 30, align: "left", title: "路由", visible: false},
+            {name: "screen", type: "text", width: 30, align: "left", title: "关联", visible: false},
+            {name: "number", type: "number", width: 50, align: "center", title: "序号"},
+            {name: "name", type: "number", width: 50, align: "center", title: "名称"},
+            {
+                name: "path", type: "text", width: 100, align: "center", title: "图片",
+                itemTemplate: function (value, item) {
+                    return value ? '<img src="' + $.url_for("image/" + value) + '" alt="" style="height:80px;">' : "无"
+                }
+            }
+        ]
+
+        createCommon(columns, url, {screen: screen, route: prefix})
+
+    </script>
+{% endblock %}

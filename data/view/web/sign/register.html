@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mark桌面后台</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link REL="SHORTCUT ICON" HREF="{{ url_for('static',filename='images/icon.ico/') }}"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/ionicons.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/adminlte.min.css') }}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/googleFonts.css') }}">
+    <style>
+        .login-box {
+            height: 650px;
+        }
+    </style>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <a href="#"><b>CCS</b><span style="font-size: 20px">后台</span></a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">{{ info if info else "请注册" }}</p>
+
+            <form action="/sign/up" method="post">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="账号" name="name">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="昵称" name="nickname">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="密码" name="password">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block">注册</button>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12" style="margin-top:10px;">
+                        <button type="button" class="btn btn-block btn-secondary" onclick="location.href='/sign'">
+                            返回登入
+                        </button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+
+                    <!-- /.col -->
+                </div>
+            </form>
+
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{{ url_for('static',filename='plugins/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ url_for('static',filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ url_for('static',filename='js/adminlte.min.js') }}"></script>
+</body>
+</html>

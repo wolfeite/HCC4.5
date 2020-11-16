@@ -1,0 +1,4 @@
+{% macro input(name,type='text',value='',class="" ,placeholder="") %}
+    <input type="{{ type }}" name="{{ name }}" value="{{ value }}" class="{{class}}" placeholder="{{ placeholder }}">
+{% endmacro %}
+{#代码中，宏的名称就是”input”，它有三个参数分别是”name”, “type”和”value”，后两个参数有默认值。#}

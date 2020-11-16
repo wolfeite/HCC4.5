@@ -1,0 +1,140 @@
+{% macro addModal(width=0,minHeight=0) %}
+    <div class="modal fade" id="addModal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="{{ 'width:{0}px'.format(width) if width >0 else '' }}">
+                <div class="modal-header">
+                    <h4 class="modal-title">新增</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"
+                     style="max-height:600px;overflow: auto;{{ 'min-height:{0}px'.format(minHeight) if minHeight >0 else '' }}">
+                    {{ caller() }}
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="addOptClose">取消</button>
+                    <button type="button" class="btn btn-primary" id="addOpt">保存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <button type="button" class="btn btn-block btn-default btn-sm" id="addModalBtn"
+            data-toggle="modal" data-target="#addModal" style="display:none"><i class="fas fa-plus"></i>
+        新增
+    </button>
+{% endmacro %}
+
+{% macro updateModal(width=0,minHeight=0) %}
+    <div class="modal fade" id="updateModal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="{{ 'width:{0}px'.format(width) if width >0 else '' }}">
+                <div class="modal-header">
+                    <h4 class="modal-title">修改</h4>
+                </div>
+                <div class="modal-body"
+                     style="max-height:600px;overflow: auto;{{ 'min-height:{0}px'.format(minHeight) if minHeight >0 else '' }}">
+                    {{ caller() }}
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="updateOptClose">取消</button>
+                    <button type="button" class="btn btn-primary" id="updateOpt">保存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <button type="button" class="btn btn-block btn-default btn-sm" id="updateModalBtn"
+            data-toggle="modal" data-target="#updateModal" style="display:none"><i class="fas fa-plus"></i>
+        修改
+    </button>
+{% endmacro %}
+
+{% macro delModal() %}
+    <div class="modal fade" id="delModal">
+        <div class="modal-dialog">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h4 class="modal-title">删除</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ caller() }}
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal" id="delOptClose">取消
+                    </button>
+                    <button type="button" class="btn btn-outline-light" id="delOpt">确定</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <button type="button" class="btn btn-danger" id="delModalBtn" data-toggle="modal" data-target="#delModal"
+            style="display:none">删除
+    </button>
+{% endmacro %}
+
+{% macro linksModal(width=0,minHeight=0) %}
+    <div class="modal fade" id="linksModal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="{{ 'width:{0}px'.format(width) if width >0 else '' }}">
+                <div class="modal-header">
+                    <h4 class="modal-title">关联</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"
+                     style="max-height:600px;overflow: auto;{{ 'min-height:{0}px'.format(minHeight) if minHeight >0 else '' }}">
+                    {{ caller() }}
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="linksOptClose">取消</button>
+                    <button type="button" class="btn btn-primary" id="linksOpt">保存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <button type="button" class="btn btn-block btn-default btn-sm" id="linksModalBtn"
+            data-toggle="modal" data-target="#linksModal" style="display:none"><i class="fas fa-plus"></i>
+        关联
+    </button>
+{% endmacro %}
+
+{% macro patternModal(width=0,minHeight=0) %}
+    <div class="modal fade" id="patternModal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="{{ 'width:{0}px'.format(width) if width >0 else '' }}">
+                <div class="modal-header">
+                    <h4 class="modal-title">选择主题</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"
+                     style="max-height:600px;overflow: auto;{{ 'min-height:{0}px'.format(minHeight) if minHeight >0 else '' }}">
+                    {{ caller() }}
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="patternOptClose">取消</button>
+                    <button type="button" class="btn btn-primary" id="patternOpt">保存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <button type="button" class="btn btn-block btn-default btn-sm" id="patternModalBtn"
+            data-toggle="modal" data-target="#patternModal" style="display:none"><i class="fas fa-plus"></i>
+        主题
+    </button>
+{% endmacro %}

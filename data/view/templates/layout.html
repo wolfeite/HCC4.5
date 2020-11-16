@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{{ "CCE" if not name else name }}</title>
+    <link REL="SHORTCUT ICON" HREF="{{ url_for('static',filename='images/icon.ico') }}"/>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/toastr/toastr.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/adminlte.min.css') }}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/googleFonts.css') }}">
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/heroAge.css') }}">
+    <style>
+        #toast-container.toast-top-center {
+            top: 12px;
+            right: 0px;
+            width: 100%;
+        }
+
+        .pb-3, .py-3 {
+            padding-bottom: 5px !important;
+        }
+
+        .custom-select:disabled {
+            color: #6c757d;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini text-sm" url_for="{{ url_for('static',filename='') }}"
+      pattern="{{ request.app["pattern"] }}">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-lightblue">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            {#            <li class="nav-item d-none d-sm-inline-block">#}
+            {#                <a href="#" class="nav-link">admin</a>#}
+            {#            </li>#}
+            {#            <li class="nav-item d-none d-sm-inline-block">#}
+            {#                <a href="#" class="nav-link">修改</a>#}
+            {#            </li>#}
+            <li class="nav-item d-none d-sm-inline-block">
+                {% set isFree = request.app["isFree"] %}
+                <a href={{ "#" if isFree else "/sign/out" }} class="nav-link">{{ '' if isFree else '退出 ' }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
+                        class="fas fa-th-large"></i></a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 sidebar-dark-lightblue" id="asideLeft">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link navbar-lightblue">
+            <img src="{{ url_for('static',filename='images/icon.ico') }}" alt="HeroAge"
+                 class="brand-image img-circle elevation-3" style="opacity: .8;width:26px;height:26px">
+            <span class="brand-text font-weight-light"
+                  style="font-weight: 900; line-height: 16px;font-size: 16px;">{{ "中控后台" if not title else title.header }}</span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <img src="{{ url_for('static',filename='images/user1.jpg') }}"
+                         class="img-circle elevation-2" alt="User Image" style="opacity: .8;width:26px;height:26px">
+                </div>
+                <div class="info">
+                    <a href="#" class="d-block">{{ session.get("user",{}).get("nickname") or "匿名" }}</a>
+                </div>
+                {% if isFree %}
+                    <div class="info">
+                        <a href="#" class="d-block" style="font-size: 12px; padding: 2px 0"
+                           id="editPwdBtn">{{ title.subhead }}</a>
+                    </div>
+                {% else %}
+                    <div class="info">
+                        <a href="#" class="d-block" style="font-size: 12px; padding: 2px 0"
+                           data-toggle="modal" data-target="#userPwdModal" id="editPwdBtn">修改</a>
+                    </div>
+                {% endif %}
+
+
+            </div>
+
+            {% set asideData = request.app["aside"] if request.app["aside"] else aside %}
+            {% set paths = request.path.split('/') | parserPath() %}
+            {% set pathsName = request.app["pathsName"] %}
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
+                    data-accordion="false" id="asideLeftList">
+                    <!-- Add icons to the links using the .nav-icon class
+                         with font-awesome or any other icon font library -->
+                    {% block sideLeft %}
+                        {% set branch = request.cookies.get("branch") or 0 %}
+                        {% set leave= request.cookies.get("leave") or 0 %}
+                        {% for val in asideData %}
+                            {% with index= loop.index - 1 %}
+                                {% set hasItem = val.item and val.item | length() >0 %}
+                                {% set isActive= branch | int() == index %}
+                                <li class="nav-item {{ 'has-treeview' if hasItem else '' }} {{ 'menu-open' if isActive else '' }}">
+                                    <a href="{{ val.url }}" class="nav-link {{ 'active' if isActive else '' }}"
+                                       data-branch="{{ index }}" data-leave=0
+                                       openwin="{{ val.href if val.href else '' }}">
+                                        <i class="nav-icon fas {{ 'fa-copy' if hasItem else 'fa-file' }}"></i>
+                                        <p>
+                                            {{ val.title }}
+                                            {% if hasItem %}
+                                                <i class="right fas fa-angle-left"></i>
+                                                <span class="badge badge-info right">{{ val.item | length() }}</span>
+                                            {% endif %}
+                                            {#<span class="right badge badge-danger">New</span>#}
+                                        </p>
+                                    </a>
+                                    {% if hasItem %}
+                                        <ul class="nav nav-treeview">
+                                            {% for iVal in val.item %}
+                                                {% with iIndex =loop.index - 1 %}
+                                                    {% set isItemActive= leave | int() ==iIndex %}
+                                                    <li class="nav-item">
+                                                        <a href="{{ iVal.url }}" data-branch="{{ index }}"
+                                                           data-leave="{{ iIndex }}" leave="true"
+                                                           class="nav-link {{ 'active' if isActive and isItemActive else '' }}">
+                                                            <i class="nav-icon fas fa-file"></i>
+                                                            <p>{{ iVal.title }}</p>
+                                                        </a>
+                                                    </li>
+                                                {% endwith %}
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </li>
+                            {% endwith %}
+                        {% endfor %}
+                        {#                        <li class="nav-item has-treeview menu-open">#}
+                        {#                            <a href="#" class="nav-link active">#}
+                        {#                                <i class="nav-icon fas fa-copy"></i>#}
+                        {#                                <p>#}
+                        {#                                    首页#}
+                        {#                                    <i class="right fas fa-angle-left"></i>#}
+                        {#                                    <span class="badge badge-info right">6</span>#}
+                        {#                                </p>#}
+                        {#                            </a>#}
+                        {#                            <ul class="nav nav-treeview">#}
+                        {#                                <li class="nav-item">#}
+                        {#                                    <a href="#" class="nav-link active">#}
+                        {#                                        <i class="fas fa-file nav-icon"></i>#}
+                        {#                                        <p>1.1</p>#}
+                        {#                                    </a>#}
+                        {#                                </li>#}
+                        {#                                <li class="nav-item">#}
+                        {#                                    <a href="#" class="nav-link">#}
+                        {#                                        <i class="fas fa-file nav-icon"></i>#}
+                        {#                                        <p>1.2</p>#}
+                        {#                                    </a>#}
+                        {#                                </li>#}
+                        {#                            </ul>#}
+                        {#                        </li>#}
+                        {#                        <li class="nav-item has-treeview">#}
+                        {#                            <a href="#" class="nav-link">#}
+                        {#                                <i class="nav-icon fas fa-copy"></i>#}
+                        {#                                <p>#}
+                        {#                                    菜单2#}
+                        {#                                    <i class="right fas fa-angle-left"></i>#}
+                        {#                                    <span class="badge badge-info right">2</span>#}
+                        {#                                </p>#}
+                        {#                            </a>#}
+                        {#                            <ul class="nav nav-treeview">#}
+                        {#                                <li class="nav-item">#}
+                        {#                                    <a href="#" class="nav-link">#}
+                        {#                                        <i class="fas fa-file nav-icon"></i>#}
+                        {#                                        <p>2.1</p>#}
+                        {#                                    </a>#}
+                        {#                                </li>#}
+                        {#                                <li class="nav-item">#}
+                        {#                                    <a href="#" class="nav-link">#}
+                        {#                                        <i class="fas fa-file nav-icon"></i>#}
+                        {#                                        <p>2.2</p>#}
+                        {#                                    </a>#}
+                        {#                                </li>#}
+                        {#                            </ul>#}
+                        {#                        </li>#}
+                        {#                        <li class="nav-item">#}
+                        {#                            <a href="#" class="nav-link">#}
+                        {#                                <i class="nav-icon fas fa-th"></i>#}
+                        {#                                <p>#}
+                        {#                                    菜单3#}
+                        {#                                    <span class="right badge badge-danger">New</span>#}
+                        {#                                </p>#}
+                        {#                            </a>#}
+                        {#                        </li>#}
+                    {% endblock %}
+                </ul>
+            </nav>
+            <!-- /.sidebar-menu -->
+        </div>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 style="font-size: 18px">
+                            {{ pathsName[pathsName | length() - 1] if not detail else detail }}
+                        </h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            {% for pName in pathsName %}
+                                <li class="breadcrumb-item"><a href="#">{{ pName }}</a>
+                                </li>
+                            {% endfor %}
+                            {#                            <li class="breadcrumb-item active">{{ request.app["pathsName"] }}</li>#}
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        {% block content %}{% endblock %}
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3">
+            {% block sideRight %}
+                <h5>操作说明</h5>
+                <p>配置后请重启</p>
+                <h5>操作项：</h5>
+                <div class="info">
+                    <a href="#" class="d-block" style="font-size: 12px; padding: 2px 0" id="syncFile">同步数据</a>
+                </div>
+            {% endblock %}
+        </div>
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            v4.1
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2020 <a href="#">{{ title.footer if title else "朗迹" }}</a>.</strong>
+    </footer>
+
+    <div class="modal fade" id="userPwdModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">修改密码</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="#" enctype="multipart/form-data" method="post">
+                        <input type="hidden" name="id" value="{{ session.get("user",{}).get("id") }}"/>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">旧密码*：</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" placeholder="现在的密码" value=""
+                                           name="password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">新密码*：</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" placeholder="修改后密码" value=""
+                                           name="newpwd">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="editPwdClose">取消</button>
+                    <button type="button" class="btn btn-primary" id="editPwdOpt">确定</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!--
+    <button type="button" class="btn btn-danger" id="delModalBtn" data-toggle="modal" data-target="#userEditModal"
+            style="display:none">删除
+    </button>-->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{{ url_for('static',filename='plugins/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ url_for('static',filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ url_for('static',filename='js/adminlte.min.js') }}"></script>
+<!-- Toastr -->
+<script src="{{ url_for('static',filename='plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ url_for('static',filename='plugins/spin/spin.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/config.js') }}"></script>
+<script src="{{ url_for('static',filename='js/heroAge.js') }}"></script>
+
+{% block js %}{% endblock %}
+<script>
+    $(document).ready(function () {
+        window.bsCustomFileInput && bsCustomFileInput.init();
+        $('.select2').length > 0 && $('.select2').select2();
+
+        var editPwdForm = $("#userPwdModal form")
+        var editPwdClose = $("#editPwdClose")
+        $("#editPwdBtn").click(function () {
+            editPwdForm[0].reset()
+        })
+        $("#editPwdOpt").click(function () {
+            var params = editPwdForm.serialize()
+            $.request({url: "/sign/pwd", data: params, type: "post", tip: true}, function (res) {
+                editPwdClose.trigger("click")
+            })
+        })
+    });
+    //window.bsCustomFileInput && bsCustomFileInput.init();
+</script>
+</body>
+</html>
