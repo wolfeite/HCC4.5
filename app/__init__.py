@@ -3,6 +3,18 @@ from app.config import secure
 from app.config import setting
 from app.initDataBase import init_db
 
+def createMode(db, t, defCol, others_foreign=["route"]):
+    tagCol, name, col, foreign = {}, t.get("name"), t.get("column"), t.get("foreign", [])
+    foreign = [foreign] if not isinstance(foreign, list) else foreign
+    t["foreign"] = list(set(foreign + others_foreign))  # 列表合并去重
+    if col and isinstance(col, dict):
+        tagCol.update(defCol)
+        tagCol.update(col)
+        for f in t["foreign"]:
+            if not f == "route":
+                tagCol[f] = "int not null references {0}(id) on delete cascade".format(f)
+        db.model(name, tagCol)
+
 def config_jinja(app):
     app.flask.add_template_global(app.config["ASIDE"], 'aside')
     app.flask.add_template_global(app.config["ENV"], 'env')
@@ -26,32 +38,44 @@ def init_app_db(db, app):
     index_col, detail_col = {}, {}
     for t_key in tables:
         t = tables[t_key]
-        name, col, foreign = t.get("name", "screen"), t.get("column", None), t.get("foreign", [])
-        foreign = [foreign] if not isinstance(foreign, list) else foreign
-        t["foreign"] = foreign
-        if col and isinstance(col, dict):
-            index_col.update(defCol)
-            index_col.update(col)
-            for f in foreign:
-                index_col[f] = "int not null references {0}(id) on delete cascade".format(f)
-            db.model(name, index_col)
-            t["foreign"].append("route")
-            det = t.get("detail", None)
-            if det and isinstance(det, dict):
-                name_, col_, foreign_ = det.get("name", "detail"), det.get("column", None), det.get("foreign", [])
-                foreign_ = [foreign_] if not isinstance(foreign_, list) else foreign_
-                det["foreign"] = foreign_
-                if col_ and isinstance(col_, dict):
-                    detail_col.update(defCol)
-                    detail_col.update(col_)
-                    # "related": "int not null references screen(id) on delete cascade",
-                    detail_col[name] = "int not null references {0}(id) on delete cascade".format(name)
-                    for f_ in foreign_:
-                        if not f_ == name:
-                            detail_col[f_] = "int not null references {0}(id) on delete cascade".format(f_)
-                    db.model(name_, detail_col)
-                    not name in foreign_ and det["foreign"].append(name)
-                    det["foreign"].append("route")
+        t_nm, detail = t.get("name", "screen"), t.get("detail")
+        t["name"] = t_nm
+        createMode(db, t, defCol, ["route"])
+        if detail and isinstance(detail, dict):
+            detail_nm, deep = detail.get("name", "detail"), detail.get("deep")
+            detail["name"] = detail_nm
+            createMode(db, detail, defCol, ["route", t_nm])
+            if deep and isinstance(deep, dict):
+                deep_nm = deep.get("name", "deep")
+                deep["name"] = deep_nm
+                createMode(db, deep, defCol, ["route", detail_nm])
+        # name, col, foreign = t.get("name", "screen"), t.get("column", None), t.get("foreign", [])
+        # foreign = [foreign] if not isinstance(foreign, list) else foreign
+        # t["foreign"] = foreign
+        # if col and isinstance(col, dict):
+        #     index_col.update(defCol)
+        #     index_col.update(col)
+        #     for f in foreign:
+        #         if not f == "route":
+        #             index_col[f] = "int not null references {0}(id) on delete cascade".format(f)
+        #     db.model(name, index_col)
+        #     (not "route" in foreign) and t["foreign"].append("route")
+        #     det = t.get("detail", None)
+        #     if det and isinstance(det, dict):
+        #         name_, col_, foreign_ = det.get("name", "detail"), det.get("column", None), det.get("foreign", [])
+        #         foreign_ = [foreign_] if not isinstance(foreign_, list) else foreign_
+        #         det["foreign"] = foreign_
+        #         if col_ and isinstance(col_, dict):
+        #             detail_col.update(defCol)
+        #             detail_col.update(col_)
+        #             # "related": "int not null references screen(id) on delete cascade",
+        #             detail_col[name] = "int not null references {0}(id) on delete cascade".format(name)
+        #             for f_ in foreign_:
+        #                 if not f_ == name and not f_ == "route":
+        #                     detail_col[f_] = "int not null references {0}(id) on delete cascade".format(f_)
+        #             db.model(name_, detail_col)
+        #             (not name in foreign_) and det["foreign"].append(name)
+        #             (not "route" in foreign_) and det["foreign"].append("route")
     print(">>>>处理后的tables", tables)
     # screen = db.model("screen", {
     #     "id": "integer not null primary key autoincrement unique",  # 主键

@@ -1,0 +1,168 @@
+{% extends "templates/layout.html" %}
+{% block css %}
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/ionicons.min.css') }}">
+    <!-- jsGrid -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/jsgrid/jsgrid.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/jsgrid/jsgrid-theme.min.css') }}">
+
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <style>
+        .pt-2, .py-2 {
+            padding-top: .2rem !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ced4da;
+        }
+
+        .pt-2.px-3 .input-group {
+            display: flex;
+            flex-direction: row;
+            max-width: 200px;
+            min-width: 60px;
+        }
+
+        #exhibitor {
+            height: 2rem;
+            padding: 0 .75rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            display: none;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+        <div id="infoEl" style="display:none;" info="{{ get_flashed_messages(category_filter=type)[0] }}"
+             path="{{ path }}" related="{{ related }}" foreign="{{ foreign if foreign else [] }}"
+             table_name="{{ tableName }}" related_name="{{ relatedName }}"></div>
+        <div class="col-12 col-sm-12">
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                        <li class="pt-2 px-3">
+                            <div class="input-group" style="max-width:300px;">
+                                <select class="form-control" id="exhibitor">
+                                    <!--<option>option 123456789abcdefghijkmnropqrist</option>-->
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-block btn-default btn-sm" id="addBtn"
+                                            data-toggle="modal" data-target="#addModal"><i class="fas fa-plus"></i>
+                                        图片
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill"
+                               href="#custom-tabs-four-home" role="tab" aria-controls="screen"
+                               aria-selected="true">列表</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                        <div class="tab-pane fade show active" id="screen" role="tabpanel"
+                             aria-labelledby="custom-tabs-four-home-tab">
+                            <div id="contentList"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+    {% from "templates/operateModal.html" import addModal,updateModal,delModal %}
+    {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
+    {% macro formModal(prefix="_") %}
+        <form role="form" action="#" enctype="multipart/form-data" method="post">
+            {{ hides(args=foreign,others=["id"]) }}
+            <!-- bs-custom-file-input
+            <input type="hidden" name="id" value=""/>
+            <input type="hidden" name="route" value=""/>
+            <input type="hidden" name="screen" value=""/>
+             -->
+            <div class="card-body">
+                {{ text(label="序号：",placeholder="示例：1", name="number" ) }}
+                {{ text(label="名字：",placeholder="示例：图片1", name="name" ) }}
+                {{ file_img(label="图片：",placeholder="请选择图片", name="path" ) }}
+            </div>
+        </form>
+    {% endmacro %}
+
+    {% call addModal() %}
+        {{ formModal("add_") }}
+    {% endcall %}
+    {% call updateModal() %}
+        {{ formModal("update_") }}
+    {% endcall %}
+    {% call delModal() %}
+        <p>确定删除该信息？</p>
+        <form role="form" action="#" enctype="multipart/form-data" method="post" style="display:none">
+            {{ hides(args=foreign,others=["id"]) }}
+            <!-- bs-custom-file-input
+            <input type="hidden" name="id" value=""/>
+            <input type="hidden" name="route" value=""/>
+            <input type="hidden" name="screen" value=""/>
+             -->
+        </form>
+    {% endcall %}
+
+{% endblock %}
+{% block js %}
+    <!-- bs-custom-file-input -->
+    <script src="{{ url_for('static',filename='plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+
+    <!-- jsGrid -->
+    <script src="{{ url_for('static',filename='plugins/jsgrid/demos/db.js') }}"></script>
+    <script src="{{ url_for('static',filename='plugins/jsgrid/jsgrid.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='plugins/jsgrid/jsgrid-zh-cn.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ url_for('static',filename='plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='app/common.js') }}"></script>
+    <script>
+        var infoEl = $("#infoEl"), prefix = infoEl.attr("path"), related = infoEl.attr("related");
+        var foreign = eval("(" + infoEl.attr("foreign") + ")"), tableName = infoEl.attr("table_name"),
+            relatedName = infoEl.attr("related_name");
+        var url = {
+            list: prefix + "list",
+            add: prefix + "add",
+            update: prefix + "update",
+            del: prefix + "del",
+            exhibit: prefix + "assist/query/exhibit?type=" + tableName
+        }
+        var columns = [
+            {name: "id", type: "number", width: 30, align: "left", title: "ID", visible: false},
+            //{name: "route", type: "text", width: 30, align: "left", title: "路由", visible: false},
+            //{name: "screen", type: "text", width: 30, align: "left", title: "关联", visible: false},
+            {name: "number", type: "number", width: 50, align: "center", title: "序号"},
+            {name: "name", type: "number", width: 50, align: "center", title: "名称"},
+            {
+                name: "path", type: "text", width: 100, align: "center", title: "图片",
+                itemTemplate: function (value, item) {
+                    return value ? '<img src="' + $.url_for("image/" + value) + '" alt="" style="height:80px;">' : "无"
+                }
+            }
+        ]
+
+        var params = {}
+        for (var i in foreign) {
+            var nm = foreign[i], ty = nm == "route" ? "text" : "number"
+            columns.push({name: nm, type: ty, width: 30, align: "left", title: nm, visible: false})
+            params[nm] = null
+            if (nm == relatedName) {
+                params[nm] = related
+            } else if (nm == "route") {
+                params[nm] = prefix
+            }
+        }
+
+        createCommon(columns, url, params)
+
+    </script>
+{% endblock %}

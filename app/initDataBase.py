@@ -11,7 +11,9 @@ def init_db(app, dataFn):
 def init_base_db(db, app):
     mode = app.config.get("MODE")
     super = app.config.get("SUPER")
+    admin = app.config.get("ADMIN")
     pat = app.config.get("PATTERN", mode.DEFAULT.value if mode else 1)
+    sheets = app.config.get("SHEETS", {})
 
     # 版本 version
     version = db.model("version", {
@@ -19,10 +21,11 @@ def init_base_db(db, app):
         "number": "integer default 1",
         "time": "DATE DEFAULT (datetime('now','localtime'))",
         "pattern": "integer default 1",
+        "intro": "text"
     })
-    versionRes = version.find("*", clause="where number=3.7")
+    versionRes = version.find("*", clause="where number=1.0")
     if len(versionRes["data"]) == 0:
-        version.insert({"number": "3.7", "pattern": pat})
+        version.insert({"number": "1.0", "pattern": pat, "intro": "后台配置版：主页，表单，路由配置"})
     # version.update({"pattern": pat}, clause="where number=3.7")
 
     # 账号 account
@@ -35,37 +38,48 @@ def init_base_db(db, app):
         "nickname": "text",
         "time": "DATE DEFAULT (datetime('now','localtime'))",
         "rank": "integer default 100",
-        "right": "integer default null",
+        "right": "text default null",
         "tel": "text default null",
-        "email": "text default null",
-        "theme": "json default '[]'"
+        "email": "text default null"
     })
-    accountRes = account.find("*", clause="where name='heroAge'")
-    if len(accountRes["data"]) == 0:
+    heroAge = account.find("*", clause="where name='heroAge'")
+    other_admin = account.find("*", clause="where name='admin'")
+    if len(heroAge["data"]) == 0:
         account.insert(
             {"id": super.ID.val, "number": super.NUMBER.val, "name": super.NAME.val, "nickname": super.NICKNAME.val,
-             "password": Account.md5(super.PASSWORD.val), "rank": super.RANK.value, "theme": super.THEME.val})
+             "password": Account.md5(super.PASSWORD.val), "rank": super.RANK.value})
+
+    if len(other_admin["data"]) == 0:
+        account.insert(
+            {"id": admin.ID.val, "number": admin.NUMBER.val, "name": admin.NAME.val, "nickname": admin.NICKNAME.val,
+             "password": Account.md5(admin.PASSWORD.val), "rank": admin.RANK.value})
 
     # >>>>set 系统设置
     # 展区管理
-    exhibit = db.model("exhibit", {
+    exhibit_opt = sheets.get("exhibit", {})
+    exhibit_col, exhibit_data = exhibit_opt.get("column", {}), exhibit_opt.get("data", [])
+    exhibit = db.model("exhibit", exhibit_col if exhibit_col else {
         "id": "integer not null primary key autoincrement unique",  # 主键
         "number": "integer default 1",  # 展厅序号
+        "type": "text not null",  # 所展示的类型
         "name": "text"  # 展厅名字
     })
-    exhibitRes = exhibit.find("*", clause="where id=0")
-    if len(exhibitRes["data"]) == 0:
-        exhibit.insert({"id": 0, "number": 0, "name": "默认展区"})
+    exhibitRes = exhibit.find("*")
+    if len(exhibitRes["data"]) == 0 and exhibit_data:
+        exhibit.insert(exhibit_data)
 
     # 主题管理
-    theme = db.model("theme", {
-        "id": "integer not null primary key autoincrement unique",  # 主键
-        "number": "integer default 1",  # 主题序号
-        "name": "text not null"  # 主题名字
-    })
-    themeRes = theme.find("*", clause="where id=0")
-    if len(themeRes["data"]) == 0:
-        theme.insert({"id": 0, "number": 0, "name": "默认主题"})
+    # theme_opt = sheets.get("theme", {})
+    # theme_col, theme_data = theme_opt.get("column", {}), theme_opt.get("data", [])
+    # theme = db.model("theme", theme_col if theme_col else {
+    #     "id": "integer not null primary key autoincrement unique",  # 主键
+    #     "number": "integer default 1",  # 主题序号
+    #     "type": "text not null",  # 所展示的类型
+    #     "name": "text not null"  # 主题名字
+    # })
+    # themeRes = theme.find("*")
+    # if len(themeRes["data"]) == 0 and theme_data:
+    #     theme.insert(theme_data)
 
     # 标签管理
     label = db.model("label", {

@@ -11,6 +11,13 @@ def filterPath(request, *args):
             break
     return res
 
+def confirmSheet(_key, tables):
+    table = tables.get(_key)
+    if not table:
+        table = tables.get("_")
+        table = list(tables.values())[0] if not table else table
+    return table
+
 def exec(flaskApp, **f):
     print("app>>>>>>>httpServer", flaskApp)
     # g.root_path = flaskApp.root_path
@@ -21,10 +28,12 @@ def exec(flaskApp, **f):
         enter, login, super = flaskApp.config["ENTER"], flaskApp.config["LOGIN"], flaskApp.config.get("SUPER")
         isFree = enter == login.FREE.value
         request.app["isFree"], request.app["ignore"] = isFree, flaskApp.config["IGNORE"]
-        request.app["routes"] = flaskApp.config["ROUTES"] # api中使用
+        request.app["routes"] = flaskApp.config["ROUTES"]  # api中使用
         request.app["db"], request.app["tables"] = f["db"], flaskApp.config["TABLES"]
         # request.app["tableUsed"] = None
         request.app["used"] = {"index": "common/index.html", "detail": "common/detail.html", "table": None}
+        request.app["root"] = flaskApp.root_path
+        request.app["template"] = flaskApp.config["TEMPLATE"]
 
         if filterPath(request):
             return None
@@ -61,7 +70,6 @@ def exec(flaskApp, **f):
         flaskApp.add_template_global(pat, 'pattern')
         request.app["pattern"] = pat
         request.app["mode"] = mode
-        request.app["root"] = flaskApp.root_path
 
         if filterPath(request):
             return None
@@ -88,15 +96,15 @@ def exec(flaskApp, **f):
 
         request.app["hasPath"] = hasPath
 
-
         for val in rootAside:
             if request.path.startswith(val["url"]):
                 tables = request.app["tables"]
                 _key = val.get("key")
-                request.app["used"]["table"] = list(tables.values())[0] if len(tables) == 1 else tables.get(_key, None)
+                request.app["used"]["table"] = confirmSheet(_key, tables)
                 # request.app["tableUsed"] = list(tables.values())[0] if len(tables) == 1 else tables.get(_key, None)
                 request.app["used"]["index"] = val.get("index", "common/index.html")
                 request.app["used"]["detail"] = val.get("detail", "common/detail.html")
+                request.app["used"]["deep"] = val.get("deep", "common/deep.html")
                 print(request.path, ">>>>>>采用的used为：", _key, request.app["used"])
                 request.app["pathsName"].append(val["title"])
                 if val.get("item") and len(val["item"]) > 0:

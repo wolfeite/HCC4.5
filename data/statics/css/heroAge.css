@@ -1,3 +1,7 @@
 .custom-file-input:lang(en) ~ .custom-file-label::after {
     content: "选择";
 }
+
+img{
+    vertical-align:top;
+}

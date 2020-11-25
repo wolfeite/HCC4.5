@@ -33,6 +33,15 @@ class SUPER(Behavior):
     RANK = RIGHTS.SUPER.value
     THEME = "all"
 
+class ADMIN(Behavior):
+    ID = 1
+    NUMBER = 1
+    NAME = "admin"
+    PASSWORD = "123456"
+    NICKNAME = "Admin"
+    RANK = RIGHTS.ADMIN.value
+    THEME = "all"
+
 # print("???>>>>", SUPER["rank"].val, SUPER.rank.val, SUPER.rank.value, type(SUPER["rank"].val))
 class LOGIN(Behavior):
     FREE = 0

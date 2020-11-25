@@ -1,14 +1,16 @@
-from .const import Behavior, MODE, LOGIN, SUPER, RIGHTS
+from .const import Behavior, MODE, LOGIN, SUPER, RIGHTS, ADMIN
 from libs.io import File, Json
 import os
 
 CONFIG = Json(("data", "config.json")).result
-
+SHEETS = Json(("data", "sheets.json")).result
+TEMPLATE = Json(("data", "template.json")).result
 # 资源路径
 assets = CONFIG.get("assets", {})
 class ASSETS(Behavior):
     PATH = assets.get("path", "data")
-    HOST = assets.get("host", ("localhost", 5000))
+    HOST = assets.get("host", "localhost")
+    PORT = assets.get("port", 5000)
     STATICS = os.sep.join((assets.get("path", "data"), "statics"))
     TEMPLATE = os.sep.join((assets.get("path", "data"), "view"))
     DB = os.sep.join((assets.get("path", "data"), "db", assets.get("db", "ccs.db")))

@@ -1,5 +1,5 @@
 {
-  "enter": "free",
+  "enter": "account",
   "title": {
     "header": "平阳电子商务局",
     "subhead": "智慧城市",
@@ -8,27 +8,42 @@
   "assets": {
     "path": "data",
     "db": "ccs.db",
-    "host": [
-      "localhost",
-      5000
-    ]
+    "host": "0.0.0.0",
+    "port": 5000
   },
   "tables": {
     "history": {
       "name": "screen",
+      "foreign": "exhibit",
       "column": {
         "year": "integer",
         "date": "text",
         "info": "text not null",
-        "ImagePath": "text"
+        "ImagePath": "text",
+        "VideoPath": "text"
       },
       "detail": {
         "name": "detail",
         "column_name": "images",
-        "foreign": "screen",
+        "foreign": [
+          "screen",
+          "exhibit"
+        ],
         "column": {
           "name": "text",
           "path": "text"
+        },
+        "deep": {
+          "name": "third",
+          "column_name": "videos",
+          "foreign": [
+            "detail",
+            "exhibit"
+          ],
+          "column": {
+            "name": "text",
+            "VideoPath": "text"
+          }
         }
       }
     }
@@ -55,6 +70,12 @@
           "url": "/news/inland"
         }
       ]
+    },
+    "toOther": {
+      "title": "跳转",
+      "name": "toOther",
+      "index": "intro/index.html",
+      "href": "http://192.168.9.253:5000"
     },
     "toJson": {
       "title": "同步",

@@ -4,52 +4,55 @@
             "id": 1,
             "number": 1,
             "route": "/history/",
-            "year": 21,
-            "date": "21",
-            "info": "qa",
-            "ImagePath": "20201104181605352.png",
+            "year": 1,
+            "date": "01-01",
+            "info": "1111",
+            "ImagePath": "",
+            "VideoPath": "20201120215335190.mp4",
+            "exhibit": 1,
             "images": [
                 {
-                    "id": 7,
+                    "id": 1,
                     "number": 1,
                     "route": "/history/detail/",
-                    "name": "22啊",
-                    "path": "2020111320124171.jpg",
-                    "screen": 1
-                },
-                {
-                    "id": 8,
-                    "number": 11,
-                    "route": "/history/detail/",
-                    "name": "安安撒",
-                    "path": "20201113202540523.jpg",
-                    "screen": 1
-                },
-                {
-                    "id": 2,
-                    "number": 11,
-                    "route": "/history/detail/",
-                    "name": "到底是谁",
-                    "path": "20201113153811522.jpg",
-                    "screen": 1
-                },
-                {
-                    "id": 5,
-                    "number": "11a",
-                    "route": "/history/detail/",
-                    "name": "a啊阿萨",
-                    "path": "20201113200024771.jpg",
-                    "screen": 1
-                },
-                {
-                    "id": 6,
-                    "number": "啊啊",
-                    "route": "/history/detail/",
-                    "name": "阿松大",
-                    "path": "20201113200538836.jpg",
-                    "screen": 1
+                    "name": "111",
+                    "path": "20201120215349120.jpg",
+                    "exhibit": 4,
+                    "screen": 1,
+                    "videos": [
+                        {
+                            "id": 2,
+                            "number": 112,
+                            "route": "/history/deep/",
+                            "name": "阿萨",
+                            "VideoPath": "20201120221221832.mp4",
+                            "exhibit": 6,
+                            "detail": 1
+                        },
+                        {
+                            "id": 3,
+                            "number": 2234,
+                            "route": "/history/deep/",
+                            "name": "11",
+                            "VideoPath": "20201121110656355.mp4",
+                            "exhibit": 6,
+                            "detail": 1
+                        }
+                    ]
                 }
             ]
+        },
+        {
+            "id": 3,
+            "number": "",
+            "route": "/history/",
+            "year": "",
+            "date": "1",
+            "info": "1sa",
+            "ImagePath": "20201122204602809.jpg",
+            "VideoPath": "",
+            "exhibit": 1,
+            "images": []
         }
     ],
     "news": {
@@ -59,25 +62,21 @@
                 "number": 1,
                 "route": "/news/international/",
                 "year": 11,
-                "date": "11",
-                "info": "11",
-                "ImagePath": "20201104181630828.jpg",
+                "date": "122",
+                "info": "111",
+                "ImagePath": "",
+                "VideoPath": "",
+                "exhibit": 1,
                 "images": [
                     {
-                        "id": 4,
+                        "id": 2,
                         "number": 1,
                         "route": "/news/international/detail/",
-                        "name": "啊啊飒飒",
-                        "path": "20201113195855505.jpg",
-                        "screen": 2
-                    },
-                    {
-                        "id": 3,
-                        "number": 34,
-                        "route": "/news/international/detail/",
-                        "name": "怪不得撒大大",
-                        "path": "20201113182400903.jpg",
-                        "screen": 2
+                        "name": "111",
+                        "path": "20201122204736607.jpg",
+                        "exhibit": 4,
+                        "screen": 2,
+                        "videos": []
                     }
                 ]
             }

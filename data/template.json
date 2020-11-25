@@ -1,0 +1,32 @@
+{
+  "/history/": {
+    "on_off": "true",
+    "opt_btn": {
+      "del": "false"
+    },
+    "readOnly": [
+      "number"
+    ],
+    "invisible": [
+      "year"
+    ]
+  },
+  "/history/detail/": {
+    "on_off": "false",
+    "opt_btn": {
+      "detail": "false",
+      "add": "false"
+    },
+    "readOnly": [
+      "number"
+    ],
+    "invisible": []
+  },
+  "/history/deep/": {
+    "on_off": "false",
+    "readOnly": [
+      "number"
+    ],
+    "invisible": []
+  }
+}

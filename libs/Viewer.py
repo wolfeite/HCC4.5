@@ -11,7 +11,7 @@ class Requester():
             self.data = self.req.args
         else:
             self.isGet = False
-            self.data = self.req.form
+            self.data = self.req.form if self.req.form else self.req.json
         self.files_names = self.getFilesNames()
         self.upPaths = upPaths
 

@@ -1,6 +1,5 @@
 function createCommon(columns, url, params, opt_btn = {}) {
-    var opt_btn_def = {del: true, update: true}
-    var opt_btn = Object.assign(opt_btn_def, opt_btn)
+    !opt_btn.add && $("#addBtn").css("display", "none")
 
     function setForm(optForm, data) {
         var optEls = optForm.find("[name]")
@@ -11,11 +10,47 @@ function createCommon(columns, url, params, opt_btn = {}) {
         }
     }
 
-    //查询
-    $.request({url: url.list, data: params}, function (res) {
-        controller.clients = res.data
-        gridList.jsGrid("loadData");
-    })
+    var exhibitor = $("#exhibitor")
+    if (Object.keys(params).indexOf("exhibit") > -1) {
+        exhibitor.css("display", "block")
+        exhibitor.on("change", function (e) {
+            //var options = exhibitor.find("option:selected").val(); //获取选中的项
+            var options = exhibitor.val()
+            console.log("exhibitor选中项为：>>", options)
+            options != null && addForm.find("[name='exhibit']").val(options)
+            params["exhibit"] = options
+            setForm(addForm, params)
+            //查询
+            $.request({url: url.list, data: params}, function (res) {
+                controller.clients = res.data
+                gridList.jsGrid("loadData");
+            })
+        })
+
+        //获取可显示列表
+        $.request({url: url.exhibit}, function (res) {
+            console.log(">>", res)
+            var data = res.data
+            exhibitor.html("")
+            if (data.length == 0) {
+                alert("请先配置展区")
+                return false
+            }
+            for (var i  in data) {
+                var item = data[i], val = item.id, name = item.name
+                exhibitor.append($.parseHTML("<option value='" + val + "'>" + name + "</option>"))
+            }
+            exhibitor.trigger("change")
+        })
+    } else {
+        //查询
+        exhibitor.css("display", "none")
+        $.request({url: url.list, data: params}, function (res) {
+            controller.clients = res.data
+            gridList.jsGrid("loadData");
+        })
+    }
+
 
     var addForm = $("#addModal form")
     var addOpt = $("#addOpt")
@@ -84,7 +119,7 @@ function createCommon(columns, url, params, opt_btn = {}) {
                 return ""
             },
             itemTemplate: function (value, item) {
-                var html_detail = opt_btn.detail ? '<button type="button" class="btn btn-default" data-type="detail">图片</button>' : ''
+                var html_detail = opt_btn.detail ? '<button type="button" class="btn btn-default" data-type="detail">详情</button>' : ''
                 var html_del = opt_btn.del ? '<button type="button" class="btn btn-default" data-type="delete">删除</button>' : ''
                 var html_update = opt_btn.update ? '<button type="button" class="btn btn-default" data-type="update">修改</button>' : ''
                 return $('<div class="btn-group">' +
@@ -135,8 +170,10 @@ function createCommon(columns, url, params, opt_btn = {}) {
                             delModalBtn.trigger("click")
                             setForm(delForm, item)
                         } else if (type_btn == "detail") {
-                            var detail_exec = opt_btn.detail || "#"
-                            window.location.href = detail_exec(item)
+                            var exec = opt_btn.detail
+                            if (exec) {
+                                window.location.href = exec(item)
+                            }
                         }
 
                         //$.request({url: "/set/exhibit/add", data: {name: "大厅", number: 3}}, function (res) {
