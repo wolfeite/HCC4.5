@@ -2,85 +2,164 @@
     "history": [
         {
             "id": 1,
-            "number": 1,
+            "number": "",
             "route": "/history/",
-            "year": 1,
-            "date": "01-01",
-            "info": "1111",
-            "ImagePath": "",
-            "VideoPath": "20201120215335190.mp4",
+            "year": "",
+            "date": "11",
+            "info": "111",
+            "ImagePath": "20201128155359235.jpg",
+            "VideoPath": "",
             "exhibit": 1,
             "images": [
+                {
+                    "id": 5,
+                    "number": 1,
+                    "route": "/history/detail/",
+                    "name": "xaas",
+                    "path": "20201128193800291.jpg",
+                    "exhibit": 5,
+                    "screen": 1,
+                    "videos": []
+                },
                 {
                     "id": 1,
                     "number": 1,
                     "route": "/history/detail/",
-                    "name": "111",
-                    "path": "20201120215349120.jpg",
+                    "name": "sa",
+                    "path": "20201128163731715.jpg",
                     "exhibit": 4,
                     "screen": 1,
                     "videos": [
                         {
-                            "id": 2,
-                            "number": 112,
+                            "id": 1,
+                            "number": 44,
                             "route": "/history/deep/",
-                            "name": "阿萨",
-                            "VideoPath": "20201120221221832.mp4",
-                            "exhibit": 6,
-                            "detail": 1
-                        },
-                        {
-                            "id": 3,
-                            "number": 2234,
-                            "route": "/history/deep/",
-                            "name": "11",
-                            "VideoPath": "20201121110656355.mp4",
+                            "name": "22",
+                            "VideoPath": "20201128170503502.mp4",
                             "exhibit": 6,
                             "detail": 1
                         }
                     ]
+                },
+                {
+                    "id": 2,
+                    "number": 2,
+                    "route": "/history/detail/",
+                    "name": "22",
+                    "path": "20201128163745422.jpg",
+                    "exhibit": 5,
+                    "screen": 1,
+                    "videos": []
+                },
+                {
+                    "id": 3,
+                    "number": 3,
+                    "route": "/history/detail/",
+                    "name": "csd",
+                    "path": "20201128163755331.jpg",
+                    "exhibit": 4,
+                    "screen": 1,
+                    "videos": []
                 }
             ]
-        },
-        {
-            "id": 3,
-            "number": "",
-            "route": "/history/",
-            "year": "",
-            "date": "1",
-            "info": "1sa",
-            "ImagePath": "20201122204602809.jpg",
-            "VideoPath": "",
-            "exhibit": 1,
-            "images": []
         }
     ],
     "news": {
         "international": [
             {
-                "id": 2,
+                "id": 6,
                 "number": 1,
                 "route": "/news/international/",
-                "year": 11,
-                "date": "122",
-                "info": "111",
+                "year": "as",
+                "date": "aaa",
+                "info": "11",
+                "ImagePath": "20201128193831581.jpg",
+                "VideoPath": "20201128193831750.mp4",
+                "exhibit": 1,
+                "images": [
+                    {
+                        "id": 6,
+                        "number": 122,
+                        "route": "/news/international/detail/",
+                        "name": "111",
+                        "path": "20201128193858542.jpg",
+                        "exhibit": 4,
+                        "screen": 6,
+                        "videos": []
+                    }
+                ]
+            },
+            {
+                "id": 7,
+                "number": 2,
+                "route": "/news/international/",
+                "year": 2222,
+                "date": "222",
+                "info": "22222",
+                "ImagePath": "",
+                "VideoPath": "",
+                "exhibit": 1,
+                "images": []
+            }
+        ],
+        "news_inland": [
+            {
+                "id": 8,
+                "number": 1,
+                "route": "/news/inland/",
+                "year": "xxxx",
+                "date": "xxxx",
+                "info": "xxxx",
                 "ImagePath": "",
                 "VideoPath": "",
                 "exhibit": 1,
                 "images": [
                     {
-                        "id": 2,
-                        "number": 1,
-                        "route": "/news/international/detail/",
-                        "name": "111",
-                        "path": "20201122204736607.jpg",
+                        "id": 8,
+                        "number": 12,
+                        "route": "/news/inland/detail/",
+                        "name": "aas",
+                        "path": "20201128194349998.jpg",
                         "exhibit": 4,
-                        "screen": 2,
+                        "screen": 8,
+                        "videos": [
+                            {
+                                "id": 2,
+                                "number": 1,
+                                "route": "/news/inland/deep/",
+                                "name": "sssss",
+                                "VideoPath": "20201128194411735.mp4",
+                                "exhibit": 6,
+                                "detail": 8
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 9,
+                "number": 2,
+                "route": "/news/inland/",
+                "year": "asa1",
+                "date": "22",
+                "info": "1121",
+                "ImagePath": "20201128193924510.jpg",
+                "VideoPath": "",
+                "exhibit": 2,
+                "images": [
+                    {
+                        "id": 7,
+                        "number": 14,
+                        "route": "/news/inland/detail/",
+                        "name": "21",
+                        "path": "20201128193935288.jpg",
+                        "exhibit": 4,
+                        "screen": 9,
                         "videos": []
                     }
                 ]
             }
-        ],
-        "news_inland": []
-    }
+        ]
+    },
+    "toOther": []
 }

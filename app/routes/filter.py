@@ -1,6 +1,16 @@
 from flask import Flask, render_template, request, abort, g, redirect, url_for, session
 import copy
 
+def checkUrlTier(path, prefix_url, used):
+    # 3层 index,detail,deep
+    url, tier = prefix_url if prefix_url.endswith("/") else "{0}/".format(prefix_url), used.get("tier")
+    if path.startswith(prefix_url):
+        used["tier"], detail, deep = "index", "{0}detail".format(url), "{0}deep".format(url)
+        if path.startswith(detail):
+            used["tier"] = "detail"
+        elif path.startswith(deep):
+            used["tier"] = "deep"
+
 def filterPath(request, *args):
     ignore = request.app["ignore"]
     ignore = ignore + list(args)
@@ -10,13 +20,6 @@ def filterPath(request, *args):
             res = True
             break
     return res
-
-def confirmSheet(_key, tables):
-    table = tables.get(_key)
-    if not table:
-        table = tables.get("_")
-        table = list(tables.values())[0] if not table else table
-    return table
 
 def exec(flaskApp, **f):
     print("app>>>>>>>httpServer", flaskApp)
@@ -29,9 +32,8 @@ def exec(flaskApp, **f):
         isFree = enter == login.FREE.value
         request.app["isFree"], request.app["ignore"] = isFree, flaskApp.config["IGNORE"]
         request.app["routes"] = flaskApp.config["ROUTES"]  # api中使用
-        request.app["db"], request.app["tables"] = f["db"], flaskApp.config["TABLES"]
-        # request.app["tableUsed"] = None
-        request.app["used"] = {"index": "common/index.html", "detail": "common/detail.html", "table": None}
+        request.app["db"], request.app["tables"] = f["db"], flaskApp.config["TABLES"]  # api中使用
+        request.app["used"] = {}
         request.app["root"] = flaskApp.root_path
         request.app["template"] = flaskApp.config["TEMPLATE"]
 
@@ -98,18 +100,30 @@ def exec(flaskApp, **f):
 
         for val in rootAside:
             if request.path.startswith(val["url"]):
-                tables = request.app["tables"]
-                _key = val.get("key")
-                request.app["used"]["table"] = confirmSheet(_key, tables)
-                # request.app["tableUsed"] = list(tables.values())[0] if len(tables) == 1 else tables.get(_key, None)
-                request.app["used"]["index"] = val.get("index", "common/index.html")
-                request.app["used"]["detail"] = val.get("detail", "common/detail.html")
-                request.app["used"]["deep"] = val.get("deep", "common/deep.html")
-                print(request.path, ">>>>>>采用的used为：", _key, request.app["used"])
+                # tables = request.app["tables"]
+                _key, has_detail, has_deep = val.get("key"), val["has_detail"], val["has_deep"]
+                index_detail, detail_detail = True if has_detail else False, True if has_deep else False
+                temp_index, temp_detail, temp_deep = "common/index.html", "common/detail.html", "common/deep.html"
+                request.app["used"] = {
+                    "table": val["table"], "prefix": val["url"], "tier": None,
+                    "index": {"temp": val.get("index", temp_index), "sheet": val["table"], "isDetail": index_detail},
+                    "detail": {"temp": val.get("detail", temp_detail), "sheet": has_detail, "isDetail": detail_detail,
+                               "related": val["table"].get("name")},
+                    "deep": {"temp": val.get("deep", temp_deep), "sheet": has_deep, "related": has_detail.get("name")}
+                }
+
+                checkUrlTier(request.path, val["url"], request.app["used"])
+                # request.app["used"]["table"] = confirmSheet(_key, tables)
+                # request.app["used"]["index"] = val.get("index", "common/index.html")
+                # request.app["used"]["detail"] = val.get("detail", "common/detail.html")
+                # request.app["used"]["deep"] = val.get("deep", "common/deep.html")
+                # request.app["used"]["prefix"] = val["url"]
                 request.app["pathsName"].append(val["title"])
                 if val.get("item") and len(val["item"]) > 0:
                     for cval in val["item"]:
+                        checkUrlTier(request.path, cval["url"], request.app["used"])
                         request.path.startswith(cval["url"]) and request.app["pathsName"].append(cval["title"])
+                print(request.path, ">>>>>>采用的used为：", _key, request.app["used"])
                 break
 
     @flaskApp.before_request
@@ -125,7 +139,8 @@ def exec(flaskApp, **f):
         # if path == "/" or path == "/index" or not res:
         if not res:
             # 首页/默认页
-            return redirect(flaskApp.config["INDEX"])
+            index = flaskApp.config["INDEX"]
+            return redirect(index if index in paths else paths[0])
 
     @flaskApp.after_request
     def excp(response):

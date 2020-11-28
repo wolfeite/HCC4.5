@@ -2,7 +2,7 @@
   "/history/": {
     "on_off": "true",
     "opt_btn": {
-      "del": "false"
+
     },
     "readOnly": [
       "number"
@@ -14,8 +14,7 @@
   "/history/detail/": {
     "on_off": "false",
     "opt_btn": {
-      "detail": "false",
-      "add": "false"
+
     },
     "readOnly": [
       "number"

@@ -1,42 +1,22 @@
 from .pattern import ViewModel
 from flask import request
 
-def factoryDB(isDetail=False, **con):
-    db = request.app.get("db")
-    name = selectTable(isDetail).get("name")
-    model = ViewModel(db, name, request, **con) if name else None
-    # if tableUsed:
-    #     if not isDetail:
-    #         model = ViewModel(db, tableUsed.get("name", "screen"), request, **con)
-    #     else:
-    #         if "detail" in path and detail:
-    #             model = ViewModel(db, detail.get("name", "detail"), request, **con)
-    #         elif "deep" in path and deep:
-    #             model = ViewModel(db, deep.get("name", "deep"), request, **con)
+def factoryDB(**con):
+    name = getSheet().get("name")
+    return getTable(name, **con) if name else None
 
-    # if len(tables) == 1:
-    #     table = tables[0]
-    #     if not isDetail:
-    #         model = ViewModel(db, table.get("name", "screen"), request, **con)
-    #     elif isDetail and tables[0].get("detail"):
-    #         model = ViewModel(db, table.get("name", "detail"), request, **con)
-    # else:
-    #     pass
-    return model
+def getTier():
+    used = request.app.get("used")
+    return used.get(used.get("tier"))
+
+def getSheet():
+    return getTier().get("sheet")
 
 def getTable(name, **con):
     return ViewModel(request.app.get("db"), name, request, **con)
 
-def selectTable(isDetail=False):
-    table = request.app.get("used", {}).get("table")
-    res, path, detail = {}, request.path, table.get("detail", {})
-    if isDetail and "detail" in path:
-        res = detail
-    elif isDetail and "deep" in path:
-        res = detail.get("deep", {})
-    elif not isDetail:
-        res = table
-    return res
+def getTemplate(path):
+    return request.app["template"].get(path, {})
 
 class Screen(ViewModel):
     def __init__(self, db, **con):

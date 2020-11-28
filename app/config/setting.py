@@ -50,14 +50,28 @@ def prefix(key_item, route):
     route["url"], route["name"] = url_prefix, name
     return url_prefix
 
+def confirmSheet(_key, tables):
+    table = tables.get(_key)
+    if not table:
+        table = tables.get("_")
+        table = list(tables.values())[0] if not table else table
+    return table
+
 for key_item in ROUTES:
     route = ROUTES[key_item]
-    url_prefix = prefix(key_item, route)
+    prefix(key_item, route)
+    table = confirmSheet(key_item, TABLES)
+    route["table"], detail = table, table.get("detail", False)
+    route["has_detail"] = detail if detail else {}
+    route["has_deep"] = {}
+    if detail:
+        deep = detail.get("deep", {})
+        route["has_deep"] = deep if deep else {}
+
     item = route.get("item", [])
     if len(item) > 0:
         for r in item:
             prefix(None, r)
-    # ASIDE.append({"title": route.get("title"), "href": route.get("href"), "url": url_prefix})
     ASIDE.append(route)
 INDEX_URL = ASIDE[0].get("url", "#")
 INDEX_ITEM = ASIDE[0].get("item", [])
