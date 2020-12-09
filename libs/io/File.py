@@ -6,61 +6,12 @@ import sys
 import os
 import datetime
 import random
-
-class Path():
-    def __init__(self, dir=""):
-        self.url = False
-        self.sep = os.sep
-        self.set_path_root()
-        self.dir = dir
-    def set_path_root(self):
-        pathArr = os.path.abspath(sys.argv[0]).split(self.sep)
-        self.enter = pathArr.pop()
-        self.root = self.sep.join(pathArr)
-        self.frozen = getattr(sys, "frozen", False)
-        print("Path对象路径分析：入口文件{0}，项目根路径：{1}，frozen：{2}".format(self.enter, self.root, self.frozen))
-        if self.frozen:
-            print(sys._MEIPASS)
-
-    def __getitem__(self, item):
-        '''内置方法, 当使用obj['name']的形式的时候, 将调用这个方法, 这里返回的结果就是值'''
-        return getattr(self, item)
-
-    @property
-    def dir(self):
-        return self.path
-
-    @dir.setter
-    def dir(self, dirName):
-        self.set_dir(dirName)
-
-    def set_dir(self, dir, root=None):
-        print("set_dir>>>", dir, isinstance(dir, (list, tuple)))
-        # self.path = self.merge(root or self.root, *dir) if isinstance(dir, (list, tuple)) else self.merge(
-        #     root or self.root, dir)
-        path = self.merge(root or self.root, *dir) if isinstance(dir, (list, tuple)) else self.merge(
-            root or self.root, dir)
-        if os.path.isfile(path):
-            self.url = path
-            paths = path.split(self.sep)
-            paths.pop(len(paths) - 1)
-            self.path = self.sep.join(paths)
-        else:
-            self.path = path
-
-    def merge(self, *args):
-        print("merge>>>>>", args)
-        return self.sep.join(args)
-
-    @classmethod
-    def join(cls, *args):
-        # 注意加入self.sep将会重置路径
-        return os.path.join(*args)
+from libs.util import Path
 
 class File():
     upPaths = {}
     def __init__(self, baseDir=""):
-        self.path = Path(baseDir)
+        self.path, self.result = Path(baseDir), None
         if self.path.url:
             self.open(self.path.url)
 

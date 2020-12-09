@@ -5,7 +5,12 @@
 from .File import File, Path
 from .Json import Json
 from .Loader import Loader
-from .Json import Json
+from libs.analyser.Config import Modules
+f = Modules(("data", "builder.json"))
+f.plugin(("libs", "io"))
+import sys
+config = getattr(sys.modules["libs.io"], "Config", None)
+config and config.Config.test_imports()
 # from .Office import Office
 # from .Pdf import Pdf
 # from .Video import Video

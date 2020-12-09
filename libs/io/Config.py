@@ -9,6 +9,10 @@ class Config(File):
     def __init__(self, baseDir):
         super(Config, self).__init__(baseDir)
 
+    @classmethod
+    def test_imports(cls):
+        print("测试动态加载Config模块成功！")
+
     def open(self, fileName):
         url = self.file_path(fileName)
         self.result = ConfigObj(url, encoding="UTF8") if url else {}

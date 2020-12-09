@@ -2,7 +2,7 @@
 # Corp: 朗迹
 # StartTime:2020.6.18
 # Version:1.0
-from libs.Viewer import View
+from libs.analyser.Viewer import View
 
 class ViewModel(View):
     def __init__(self, db, name, request, **con):

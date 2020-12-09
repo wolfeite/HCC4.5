@@ -1,7 +1,7 @@
 import json
 from app.models.Common import factoryDB, getTable, getSheet, getTier, getTemplate
-from flask import render_template as render, redirect, request
-from libs.Viewer import Requester
+from flask import render_template as render, request
+from libs.analyser.Viewer import Requester
 
 def add_route(bp, **f):
     db = f["db"]

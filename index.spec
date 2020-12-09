@@ -1,13 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
-
+modules = ['pkg_resources.py2_warn']
 
 a = Analysis(['index.py'],
-             pathex=['E:\\wolfeite\\projectPy\\heroage\\EHCC4.0\\project\\HCC4.5'],
+             pathex=['E:\wolfeite\projectPy\heroage\EHCC4.0\project\HCC4.5'],
              binaries=[],
              datas=[],
-             hiddenimports=['pkg_resources.py2_warn'],
+             hiddenimports=modules,
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -30,4 +30,6 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True , icon='icon.ico')
+          console=False , icon='icon.ico')
+
+        

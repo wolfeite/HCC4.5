@@ -1,0 +1,9 @@
+{
+  "modules": {
+    "libs": {
+      "io": [
+        "Config"
+      ]
+    }
+  }
+}

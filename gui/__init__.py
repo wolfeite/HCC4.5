@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 
 from .UI.Ui_UI import Ui_UI
-from libs.IO import Path
+from libs.io import Path
 
 class Gui(Ui_UI):
     def __init__(self):
