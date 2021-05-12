@@ -1,31 +1,8 @@
 {
-  "/history/": {
+  "/audio/": {
     "on_off": "true",
     "opt_btn": {
-
-    },
-    "readOnly": [
-      "number"
-    ],
-    "invisible": [
-      "year"
-    ]
-  },
-  "/history/detail/": {
-    "on_off": "false",
-    "opt_btn": {
-
-    },
-    "readOnly": [
-      "number"
-    ],
-    "invisible": []
-  },
-  "/history/deep/": {
-    "on_off": "false",
-    "readOnly": [
-      "number"
-    ],
-    "invisible": []
+      "del": "true"
+    }
   }
 }

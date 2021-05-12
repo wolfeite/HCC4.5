@@ -10,18 +10,18 @@ import os, sys
 
 # 处理路径
 class Path():
-    def __init__(self, dir=""):
-        self.url = False
-        self.sep = os.sep
-        self.set_path_root()
+    def __init__(self, dir="", isFile=False, mk=False):
+        self.url, self.isFile, self.mk = False, isFile, mk
+        not getattr(self, "root", None) and self.parsePath()
         self.dir = dir
 
-    def set_path_root(self):
-        pathArr = os.path.abspath(sys.argv[0]).split(self.sep)
-        self.enter = pathArr.pop()
-        self.root = self.sep.join(pathArr)
-        self.frozen = getattr(sys, "frozen", False)
-        self.meipass = getattr(sys, "_MEIPASS", self.root)
+    @classmethod
+    def parsePath(cls):
+        cls.sep = os.sep
+        pathArr = os.path.abspath(sys.argv[0]).split(cls.sep)
+        cls.enter = pathArr.pop()
+        cls.root = cls.sep.join(pathArr)
+        cls.frozen, cls.meipass = getattr(sys, "frozen", False), getattr(sys, "_MEIPASS", cls.root)
 
     def __getitem__(self, item):
         '''内置方法, 当使用obj['name']的形式的时候, 将调用这个方法, 这里返回的结果就是值'''
@@ -35,6 +35,17 @@ class Path():
     def dir(self, dirName):
         self.set_dir(dirName)
 
+    def make(self, path):
+        if self.mk and not os.path.exists(path):
+            if self.isFile:
+                # os.mknod(path)#windows文件系统与linux文件系统不同，没有node的概念，所以会报错
+                dirPath = os.path.split(path)[0]
+                not os.path.exists(dirPath) and os.makedirs(dirPath)
+                with open(path, "w") as f:
+                    print("创建文件>>", path)
+            else:
+                os.makedirs(path)
+
     def set_dir(self, dir="", root=None):
         dir = dir if isinstance(dir, (list, tuple)) else [dir]
         for i, p in enumerate(["root", "meipass"]):
@@ -43,6 +54,7 @@ class Path():
                 attr, base = "way", self.meipass
             base = root if root else base
             path = self.merge(base, *dir)
+            self.make(path)
 
             if os.path.isfile(path):
                 self.url = path
@@ -68,6 +80,7 @@ class Path():
             _key = ".".join(_keys)
             res[_key] = {"root": root, "dirs": dirs, "files": files}
         return res
+Path.parsePath()
 
 # 插件
 class Plug():

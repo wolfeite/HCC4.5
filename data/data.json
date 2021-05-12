@@ -1,177 +1,179 @@
 {
-    "history": [
+    "audio": [
         {
-            "id": 10,
-            "number": "",
-            "route": "/history/",
-            "year": "",
-            "date": "jdkl",
-            "info": "dddd",
-            "ImagePath": "20201204141037921.jpg",
-            "VideoPath": "20201204141037866.mp4",
-            "exhibit": 1,
-            "images": []
+            "id": 51,
+            "number": 1,
+            "route": "/audio/",
+            "name": "2",
+            "path": "",
+            "page_1": [],
+            "page_2": []
         },
         {
-            "id": 1,
-            "number": "",
-            "route": "/history/",
-            "year": "",
-            "date": "11",
-            "info": "111",
-            "ImagePath": "20201128155359235.jpg",
-            "VideoPath": "",
-            "exhibit": 1,
-            "images": [
+            "id": 46,
+            "number": 2,
+            "route": "/audio/",
+            "name": "1ss",
+            "path": "",
+            "page_1": [
                 {
-                    "id": 5,
+                    "id": 12,
                     "number": 1,
-                    "route": "/history/detail/",
-                    "name": "xaas",
-                    "path": "20201128193800291.jpg",
-                    "exhibit": 5,
-                    "screen": 1,
-                    "videos": []
+                    "route": "/audio/detail/",
+                    "name": "LL",
+                    "path": "1_20210506220917_696.jpg",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
                 },
                 {
-                    "id": 1,
+                    "id": 11,
                     "number": 1,
-                    "route": "/history/detail/",
-                    "name": "sa",
-                    "path": "20201128163731715.jpg",
-                    "exhibit": 4,
-                    "screen": 1,
-                    "videos": [
-                        {
-                            "id": 1,
-                            "number": 44,
-                            "route": "/history/deep/",
-                            "name": "22",
-                            "VideoPath": "20201128170503502.mp4",
-                            "exhibit": 6,
-                            "detail": 1
-                        }
-                    ]
+                    "route": "/audio/detail/",
+                    "name": "12W",
+                    "path": "测试页面_20210506143852_628.png",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                },
+                {
+                    "id": 10,
+                    "number": 1,
+                    "route": "/audio/detail/",
+                    "name": "1",
+                    "path": "测试页面_20210506143158_705.png",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
                 },
                 {
                     "id": 2,
-                    "number": 2,
-                    "route": "/history/detail/",
-                    "name": "22",
-                    "path": "20201128163745422.jpg",
-                    "exhibit": 5,
-                    "screen": 1,
-                    "videos": []
+                    "number": 1,
+                    "route": "/audio/detail/",
+                    "name": "2222",
+                    "path": "",
+                    "screen": 46,
+                    "deep_1": [
+                        {
+                            "id": 1,
+                            "number": 11,
+                            "route": "/audio/deep/",
+                            "name": "1111",
+                            "path": null,
+                            "page_1": 2
+                        }
+                    ],
+                    "deep_3": [],
+                    "deep_4": []
                 },
                 {
                     "id": 3,
-                    "number": 3,
-                    "route": "/history/detail/",
-                    "name": "csd",
-                    "path": "20201128163755331.jpg",
-                    "exhibit": 4,
-                    "screen": 1,
-                    "videos": []
+                    "number": 33,
+                    "route": "/audio/detail/",
+                    "name": "33",
+                    "path": "",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                },
+                {
+                    "id": 6,
+                    "number": 44,
+                    "route": "/audio/detail/",
+                    "name": "222",
+                    "path": "",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                },
+                {
+                    "id": 9,
+                    "number": 123,
+                    "route": "/audio/detail/",
+                    "name": "123",
+                    "path": "测试页面.png_20210506142755_815.png",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                },
+                {
+                    "id": 7,
+                    "number": 133,
+                    "route": "/audio/detail/",
+                    "name": "222",
+                    "path": "_20210506142317_255.png",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                },
+                {
+                    "id": 8,
+                    "number": 453,
+                    "route": "/audio/detail/",
+                    "name": "234",
+                    "path": "20210506142539_244.jpg",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                },
+                {
+                    "id": 4,
+                    "number": 3334,
+                    "route": "/audio/detail/",
+                    "name": "222",
+                    "path": "20210505174255324.jpg",
+                    "screen": 46,
+                    "deep_1": [],
+                    "deep_3": [],
+                    "deep_4": []
+                }
+            ],
+            "page_2": [
+                {
+                    "id": 1,
+                    "number": 12,
+                    "route": "/audio/detail/",
+                    "name": "212",
+                    "path": "",
+                    "screen": 46,
+                    "deep_2": []
                 }
             ]
+        },
+        {
+            "id": 48,
+            "number": 3,
+            "route": "/audio/",
+            "name": "",
+            "path": "20210118162116923.wav",
+            "page_1": [],
+            "page_2": []
+        },
+        {
+            "id": 50,
+            "number": 4,
+            "route": "/audio/",
+            "name": "222",
+            "path": "",
+            "page_1": [],
+            "page_2": []
+        },
+        {
+            "id": 49,
+            "number": 5,
+            "route": "/audio/",
+            "name": "dcc",
+            "path": "20210118162812878.wav",
+            "page_1": [],
+            "page_2": []
         }
-    ],
-    "news": {
-        "international": [
-            {
-                "id": 6,
-                "number": 1,
-                "route": "/news/international/",
-                "year": "as",
-                "date": "aaa",
-                "info": "11",
-                "ImagePath": "20201128193831581.jpg",
-                "VideoPath": "20201128193831750.mp4",
-                "exhibit": 1,
-                "images": [
-                    {
-                        "id": 6,
-                        "number": 122,
-                        "route": "/news/international/detail/",
-                        "name": "111",
-                        "path": "20201128193858542.jpg",
-                        "exhibit": 4,
-                        "screen": 6,
-                        "videos": []
-                    }
-                ]
-            },
-            {
-                "id": 7,
-                "number": 2,
-                "route": "/news/international/",
-                "year": 2222,
-                "date": "222",
-                "info": "22222",
-                "ImagePath": "",
-                "VideoPath": "",
-                "exhibit": 1,
-                "images": []
-            }
-        ],
-        "news_inland": [
-            {
-                "id": 8,
-                "number": 1,
-                "route": "/news/inland/",
-                "year": "xxxx",
-                "date": "xxxx",
-                "info": "xxxx",
-                "ImagePath": "",
-                "VideoPath": "",
-                "exhibit": 1,
-                "images": [
-                    {
-                        "id": 8,
-                        "number": 12,
-                        "route": "/news/inland/detail/",
-                        "name": "aas",
-                        "path": "20201128194349998.jpg",
-                        "exhibit": 4,
-                        "screen": 8,
-                        "videos": [
-                            {
-                                "id": 2,
-                                "number": 1,
-                                "route": "/news/inland/deep/",
-                                "name": "sssss",
-                                "VideoPath": "20201128194411735.mp4",
-                                "exhibit": 6,
-                                "detail": 8
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "id": 9,
-                "number": 2,
-                "route": "/news/inland/",
-                "year": "asa1",
-                "date": "22",
-                "info": "1121",
-                "ImagePath": "20201128193924510.jpg",
-                "VideoPath": "",
-                "exhibit": 2,
-                "images": [
-                    {
-                        "id": 7,
-                        "number": 14,
-                        "route": "/news/inland/detail/",
-                        "name": "21",
-                        "path": "20201128193935288.jpg",
-                        "exhibit": 4,
-                        "screen": 9,
-                        "videos": []
-                    }
-                ]
-            }
-        ]
-    },
-    "toOther": []
+    ]
 }

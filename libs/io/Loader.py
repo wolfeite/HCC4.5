@@ -14,8 +14,9 @@ class Loader(File):
                 filename = fi.filename
                 if filename == '':
                     return ""
-                ftype = '.' + filename.rsplit('.', 1)[1]
-                file = self.named(ftype)
+                fname, ftype = filename.rsplit('.', 1)
+                # ftype = '.' + filename.rsplit('.', 1)[1]
+                file = self.named(ftype, fname)
                 dir_Path = os.path.join(self.dir, *paths)
                 if not os.path.exists(dir_Path):
                     os.makedirs(dir_Path)

@@ -1,6 +1,8 @@
 from .const import Behavior, MODE, LOGIN, SUPER, RIGHTS, ADMIN
 from libs.io import File, Json
 import os
+from libs.core import dater
+dater().debug("---主程序运行：进行配置初始化！QQ---")
 
 CONFIG = Json(("data", "config.json")).result
 SHEETS = Json(("data", "sheets.json")).result
@@ -20,8 +22,9 @@ class UP(Behavior):
     IMAGE = (ASSETS.STATICS.val, "image")
     VIDEO = (ASSETS.STATICS.val, "video")
     AUDIO = (ASSETS.STATICS.val, "audio")
+    OTHER = (ASSETS.STATICS.val, "other")
 
-File.upPaths = {"image": UP.IMAGE.val, "video": UP.VIDEO.val, "audio": UP.AUDIO.val}
+File.upPaths = {"image": UP.IMAGE.val, "video": UP.VIDEO.val, "audio": UP.AUDIO.val, "application": UP.OTHER.val}
 print(">>>>>>>upPaths>>>>", File.upPaths)
 
 TITLE = CONFIG.get("title", {"header": "", "subhead": "", "footer": ""})
@@ -57,17 +60,36 @@ def confirmSheet(_key, tables):
         table = list(tables.values())[0] if not table else table
     return table
 
+def confirmChildren(child):
+    res = {}
+    if isinstance(child, dict):
+        _key = child.get("key", child.get("name"))
+        child["key"] = _key
+        res[_key] = child
+    if isinstance(child, (list, tuple)):
+        for k, v in enumerate(child): res.update(confirmChildren(v))
+    return res
+
 for key_item in ROUTES:
     route = ROUTES[key_item]
     prefix(key_item, route)
     table = confirmSheet(key_item, TABLES)
     route["table"], detail = table, table.get("detail", False)
-    route["has_detail"] = detail if detail else {}
-    route["has_deep"] = {}
-    if detail:
-        deep = detail.get("deep", {})
-        route["has_deep"] = deep if deep else {}
+    # route["has_detail"] = detail if detail else {}
+    # route["has_deep"] = {}
+    # if detail:
+    #     deep = detail.get("deep", {})
+    #     route["has_deep"] = deep if deep else {}
 
+    detail = confirmChildren(detail)
+    route["has_detail"] = detail
+    route["has_deep"] = {}
+    for k, v in detail.items():
+        deep = v.get("deep", {})
+        if deep:
+            deep = confirmChildren(deep)
+            for _k_ in deep: deep[_k_]["parent"] = k
+            route["has_deep"].update(deep)
     item = route.get("item", [])
     if len(item) > 0:
         for r in item:

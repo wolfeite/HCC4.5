@@ -2,7 +2,7 @@
 {% block optDataForm %}
     {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
     {{ text(label="名字：",placeholder="示例：图片1", name="name" ) }}
-    {{ file_video(label="视频：",placeholder="请选择视频", name="VideoPath" ) }}
+    {{ file_video(label="视频：",placeholder="请选择视频", name="path" ) }}
 {% endblock %}
 
 {% block optJs %}
@@ -10,7 +10,7 @@
         combine([
             {name: "name", type: "text", width: 50, align: "center", title: "名称"},
             {
-                name: "VideoPath", type: "text", width: 100, align: "center", title: "视频",
+                name: "path", type: "text", width: 100, align: "center", title: "视频",
                 itemTemplate: function (value, item) {
                     return value ? '<video src="' + $.url_for("video/" + value) + '" controls="controls" style="width:100%;height:80px;"></video>' : "无"
                 }

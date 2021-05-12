@@ -1,7 +1,8 @@
-function combine(cols) {
+function combine(cols, options = {}) {
     var infoEl = $("#infoEl"), prefix = infoEl.attr("path"), foreign = eval("(" + infoEl.attr("foreign") + ")");
     var tableName = infoEl.attr("table_name"), related = infoEl.attr("related"),
-        relatedName = infoEl.attr("related_name"), rootPrefix = prefix, detailName = "detail";
+        relatedName = infoEl.attr("related_name"), rootPrefix = prefix, detailName = "detail",
+        children = eval("(" + infoEl.attr("children") + ")");
     if (rootPrefix.indexOf("detail") > -1) {
         detailName = "deep"
         var rootArr = rootPrefix.split("/")
@@ -14,15 +15,16 @@ function combine(cols) {
     }
 
     var url = {
-        list: prefix + "list",
-        add: prefix + "add",
-        update: prefix + "update",
-        del: prefix + "del",
-        exhibit: rootPrefix + "assist/query/exhibit?type=" + tableName
+        list: prefix + "list" + "?child=" + tableName,
+        add: prefix + "add" + "?child=" + tableName,
+        update: prefix + "update" + "?child=" + tableName,
+        del: prefix + "del" + "?child=" + tableName,
+        exhibit: rootPrefix + "assist/query/exhibit?type=" + tableName,
+        sort: prefix + "sort" + "?child=" + tableName
     }
 
     var editForm = $("#addModal form,#updateModal form"), columns = cols,
-        temp = eval("(" + infoEl.attr("template") + ")"), isDetail = infoEl.attr("isDetail");
+        temp = eval("(" + infoEl.attr("template") + ")"), isDetail = infoEl.attr("is_detail");
     //1.1根据route判断是否显示该项
     editForm.find("[route]").css("display", "none")
     editForm.find("[route='" + prefix + "']").css("display", "flex")
@@ -37,22 +39,30 @@ function combine(cols) {
         }
     }
 
+    //2.添加默认项目
+    var defCol = {
+        "id": {name: "id", type: "number", width: 30, align: "left", title: "ID", visible: false},
+        "number": {name: "number", type: "number", width: 50, align: "center", title: "序号"}
+    }, tagCols = [], srcCols = []
     for (var num in columns) {
         var col = columns[num], name = col.name, index = invisible.indexOf(name);
-        if ((col.route && col.route !== prefix) || index > -1) {
+        if (!col.visible && ((col.route && col.route !== prefix) || index > -1)) {
             col.visible = false
         }
+        if (defCol[name]) {
+            defCol[name] = Object.assign(defCol[name], col)
+            continue;
+        }
+        tagCols.push(col)
     }
 
+    for (var s in defCol) {
+        srcCols.push(defCol[s])
+    }
+    tagCols = srcCols.concat(tagCols)
 
-    //2.添加默认项目
-    var tagCols = [
-        {name: "id", type: "number", width: 30, align: "left", title: "ID", visible: false},
-        {name: "number", type: "number", width: 50, align: "center", title: "序号"},
-    ]
-    tagCols = tagCols.concat(columns)
-    var params = {}
     //3.添加外键项且不显示，并设置查询参数params
+    var params = {}
     for (var i in foreign) {
         var nm = foreign[i], ty = nm == "route" ? "text" : "number"
         tagCols.push({name: nm, type: ty, width: 30, align: "left", title: nm, visible: false})
@@ -65,15 +75,16 @@ function combine(cols) {
     }
 
     //4.操作按钮控制
-    var detailFn = function (item) {
+    var detailFn = function (item, chd) {
         var id = item.id, name = item.name ? item.name : id
-        return rootPrefix + detailName + "?id=" + id + "&name=" + name
+        return rootPrefix + detailName + "?id=" + id + "&name=" + name + "&child=" + chd
     }
 
-    var opt_btn_def = {del: true, update: true, add: true, detail: isDetail == "True" ? detailFn : false},
+    isDetail = isDetail == "True" ? true : false
+    var opt_btn_def = {del: true, update: true, add: true, detail: isDetail ? detailFn : false},
         opt_btn = temp.opt_btn || opt_btn_def;
     if (opt_btn == true || opt_btn == "true") {
-        opt_btn = {del: true, update: true, add: true, detail: detailFn}
+        opt_btn = opt_btn_def
     } else if (opt_btn == false || opt_btn == "false") {
         opt_btn = {del: false, update: false, add: false, detail: false}
     } else if ($.isPlainObject(opt_btn)) {
@@ -81,13 +92,17 @@ function combine(cols) {
             var val = opt_btn[o];
             opt_btn[o] = val == "false" ? false : val == "true" ? true : Boolean(val);
         }
-        if (opt_btn.detail == undefined || opt_btn.detail == true) {
-            opt_btn.detail = detailFn
+        if (opt_btn.detail != undefined) {
+            opt_btn.detail = opt_btn.detail == true && isDetail ? detailFn : false
         }
         opt_btn = Object.assign(opt_btn_def, opt_btn)
     } else {
         opt_btn = opt_btn_def
     }
 
-    createCommon(tagCols, url, params, opt_btn)
+    var opts = $.isPlainObject(options) ? Object.assign({
+        add: {}, update: {}, del: {}, pops: [], text: {}, btn: {}
+    }, options) : {}
+    opts.children = children
+    createCommon(tagCols, url, params, opt_btn, opts)
 }

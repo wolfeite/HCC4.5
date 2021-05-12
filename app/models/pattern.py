@@ -12,6 +12,9 @@ class ViewModel(View):
 
     def insert(self, row=None, orderBy=None, whereBy=None):
         row = row if row else dict(self)
+        for name in list(row.keys()):
+            row.get(name) == None and row.pop(name)
+
         optRes = self.model.insert(row)
         print("optRes:>>", optRes)
         res = self.findBy(self.byNames, orderBy=orderBy, whereBy=whereBy)
@@ -22,6 +25,8 @@ class ViewModel(View):
         row = row if row else dict(self)
         for name in self.requester.files_names:
             not row.get(name) and row.pop(name)
+        for name in list(row.keys()):
+            row.get(name) == None and row.pop(name)
         optRes = self.model.update(row, clause="where id={0}".format(self.id))
         res = self.findBy(self.byNames, orderBy=orderBy, whereBy=whereBy)
         optRes["data"] = res["data"]

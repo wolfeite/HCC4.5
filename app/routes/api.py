@@ -1,8 +1,11 @@
 import json
 from libs.io import File, Json
+from libs.util import Path
 from app.models.Common import factoryDB
-import os
+import os, shutil
 from flask import request
+from libs.analyser.Viewer import Requester
+from app.models.pattern import ViewModel
 
 def confirmSheet(_key, tables):
     table = tables.get(_key)
@@ -18,26 +21,28 @@ def getData(db, table, url, orderBy):
         "data", [])
     detail_obj = table.get("detail")
     if detail_obj:
-        col_nm_detail, nm_detail = detail_obj.get("column_name", "details"), detail_obj.get("name", "detail")
-        detail, url_detail = db.models[nm_detail], "{0}detail/".format(url)
-        deep_obj, col_nm_deep, nm_deep, deep, url_deep = detail_obj.get("deep"), None, None, None, None
-        if deep_obj:
-            col_nm_deep, nm_deep = deep_obj.get("column_name", "deep"), deep_obj.get("name", "deep")
-            deep, url_deep = db.models[nm_deep], "{0}deep/".format(url)
-        # detail_foreign = detail_obj.get("foreign", [])
-        for i, r in enumerate(data_res):
-            clause = "where route='{0}' and {1}={2} {3}".format(url_detail, table_name, r.get("id"), orderBy)
-            # foreign_clause = []
-            # for j, f in enumerate(detail_foreign):
-            #     val = r.get("id")
-            #     strCal = "{0}='{1}'" if isinstance(val, str) else "{0}={1}"
-            #     (not f == "route") and foreign_clause.append(strCal.format(f, val))
-            # clause = "where route='{0}' and {1} {2}".format(url, " and ".join(foreign_clause), orderBy)
-            r[col_nm_detail] = detail.find("*", clause=clause).get("data", [])
+        detail_obj = detail_obj if isinstance(detail_obj, (list, tuple)) else [detail_obj]
+        for v in detail_obj:
+            nm_detail = v.get("name", "detail")
+            col_nm_detail = v.get("column_name", nm_detail)
+            detail, url_detail = db.models[nm_detail], "{0}detail/".format(url)
+            # detail_foreign = detail_obj.get("foreign", [])
+
+            deep_obj, col_nm_deep, nm_deep, deep, url_deep = v.get("deep", []), None, None, None, None
             if deep_obj:
-                for j, d in enumerate(r[col_nm_detail]):
-                    clause_d = "where route='{0}' and {1}={2} {3}".format(url_deep, nm_detail, d.get("id"), orderBy)
-                    d[col_nm_deep] = deep.find("*", clause=clause_d).get("data", [])
+                deep_obj = deep_obj if isinstance(deep_obj, (list, tuple)) else [deep_obj]
+
+            for i, r in enumerate(data_res):
+                clause = "where route='{0}' and {1}={2} {3}".format(url_detail, table_name, r.get("id"), orderBy)
+                r[col_nm_detail] = detail.find("*", clause=clause).get("data", [])
+
+                for dv in deep_obj:
+                    nm_deep = dv.get("name", "deep")
+                    col_nm_deep = dv.get("column_name", nm_deep)
+                    deep, url_deep = db.models[nm_deep], "{0}deep/".format(url)
+                    for j, d in enumerate(r[col_nm_detail]):
+                        clause_d = "where route='{0}' and {1}={2} {3}".format(url_deep, nm_detail, d.get("id"), orderBy)
+                        d[col_nm_deep] = deep.find("*", clause=clause_d).get("data", [])
     return data_res
 
 def add_route(bp, **f):
@@ -49,11 +54,12 @@ def add_route(bp, **f):
         routes, tables = request.app.get("routes", {}), request.app.get("tables", {})
         json_data, orderBy, res = {}, "order by number ASC,id DESC", {"success": True}
         for route_key in routes:
-            if not route_key == "toJson":
-                route = routes[route_key]
+            route = routes[route_key]
+            url = route.get("url")
+            if not url in ["#"]:
                 table = confirmSheet(route_key, tables)
-                item = route.get("item")
-                name, url = route.get("name", route_key), route.get("url", "/{0}".format(route_key))
+                name, item = route.get("name", route_key), route.get("item")
+                url = url if url else "/{0}".format(route_key)
                 if item:
                     json_data[name] = {}
                     for i in item:
@@ -63,4 +69,54 @@ def add_route(bp, **f):
                     json_data[name] = getData(db, table, url, orderBy)
         to_json.write("data.json", json_data)
         res["data"] = json_data
+        return json.dumps(res)
+
+    @bp.route("/moveTo", methods=["POST", "GET"])
+    @bp.route("/moveTo/<path:table>/<path:url>", methods=["POST", "GET"])
+    def moveTo(table="", url=""):
+        res, orderBy, resData = {"success": True}, "order by number ASC,id DESC", {}
+        if not table or not url:
+            res["success"] = False
+            res["msg"] = "缺少参数！"
+            return json.dumps(res)
+
+        db = request.app.get("db")
+        resData = db.models[table].find("*", clause="where route='{0}' {1}".format("/audio/", orderBy)).get(
+            "data", [])
+        dirPath, disPath = Path(("data", "statics", "audio")).dir, Path(("data", "mp3"), mk=True).dir
+        for i, val in enumerate(resData):
+            tag, path = "{0}.wav".format(val["id"]), val["path"]
+            dirFile, disFile = Path.join(dirPath, path), Path.join(disPath, tag)
+            if path and os.path.isfile(dirFile):
+                shutil.copyfile(dirFile, disFile)
+        res["msg"] = "音频转移完成！"
+        return json.dumps(res)
+
+    @bp.route("/query/<path:table>", methods=["POST", "GET"])
+    @bp.route("/query/<path:table>/<path:sep>", methods=["POST", "GET"])
+    def query(table, sep="_"):
+        # 查询
+        db, args, orderBy = request.app.get("db"), request.args, "order by number ASC,id DESC"
+        names, res = table.split(sep), {}
+        clauseWhere = [("{0}='{1}'" if isinstance(v, str) else "{0}={1}").format(i, v) for i, v in args.items()]
+        clause = " and ".join(clauseWhere)
+        orderBy = "where {0} {1}".format(clause, orderBy) if clause else orderBy
+        # print("where {0} {1}".format(clause, orderBy))
+        for name in names:
+            res[name] = db.models[name].find("*", clause=orderBy).get("data", []) if name in db.models else []
+        return json.dumps(res)
+
+    @bp.route("/up/<path:table>", methods=["POST", "GET"])
+    def up(table):
+        # 表单上传并入数据表
+        db, orderBy, rt = request.app.get("db"), "order by number ASC,id DESC", {"route": "/{0}/".format(table)}
+        res = ViewModel(db, table, request, pops="id", extra=rt).insert(orderBy=orderBy) if table in db.models else {}
+        return json.dumps(res)
+
+    @bp.route("/test", methods=["POST", "GET"])
+    def test():
+        # 链接测试接口
+        res = request.values if request.values else getattr(request, "json", {})
+        print("收到参数为", res)
+        res = {"success": True, "data": res}
         return json.dumps(res)

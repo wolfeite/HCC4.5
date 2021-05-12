@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, abort, g, redirect, url_for, session
-import copy
+import copy, json
 
 def checkUrlTier(path, prefix_url, used):
     # 3层 index,detail,deep
@@ -20,6 +20,12 @@ def filterPath(request, *args):
             res = True
             break
     return res
+
+def is_xhr(request):
+    return request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+def getTemp(val, defval, child=""):
+    return val.get(child, defval) if isinstance(val, dict) else val if isinstance(val, str) else defval
 
 def exec(flaskApp, **f):
     print("app>>>>>>>httpServer", flaskApp)
@@ -101,23 +107,37 @@ def exec(flaskApp, **f):
         for val in rootAside:
             if request.path.startswith(val["url"]):
                 # tables = request.app["tables"]
+                print("使用的路由表为>>>>>", val)
                 _key, has_detail, has_deep = val.get("key"), val["has_detail"], val["has_deep"]
-                index_detail, detail_detail = True if has_detail else False, True if has_deep else False
+                is_detail, is_deep = True if has_detail else False, True if has_deep else False
                 temp_index, temp_detail, temp_deep = "common/index.html", "common/detail.html", "common/deep.html"
-                request.app["used"] = {
-                    "table": val["table"], "prefix": val["url"], "tier": None,
-                    "index": {"temp": val.get("index", temp_index), "sheet": val["table"], "isDetail": index_detail},
-                    "detail": {"temp": val.get("detail", temp_detail), "sheet": has_detail, "isDetail": detail_detail,
-                               "related": val["table"].get("name")},
-                    "deep": {"temp": val.get("deep", temp_deep), "sheet": has_deep, "related": has_detail.get("name")}
+
+                child = request.args.get("child")
+                index_tab, detail_tab, deep_tab = val["table"], has_detail.get(child, {}), has_deep.get(child, {})
+                index_nm = index_tab.get("name")
+
+                index_children = list(has_detail.keys()) if has_detail else []
+                detail_children = [k for k, v in has_deep.items() if child == v.get("parent")]
+
+                index, detail, deep = val.get("index"), val.get("detail"), val.get("deep")
+                temp_index = index if isinstance(index, str) else temp_index
+                temp_detail = getTemp(detail, temp_detail, child)
+                temp_deep = getTemp(deep, temp_deep, child)
+
+                used = {
+                    "index": {"temp": temp_index, "sheet": index_tab, "isDetail": is_detail,
+                              "children": index_children},
+                    "detail": {"temp": temp_detail, "sheet": detail_tab,
+                               "isDetail": is_deep, "related": index_nm, "children": detail_children},
+                    "deep": {"temp": temp_deep, "sheet": deep_tab, "related": deep_tab.get("parent"), "children": []}
                 }
+                # request.app["used"] = {"table": index_tab, "prefix": val["url"], "tier": None}
+                request.app["used"] = {"prefix": val["url"], "tier": None}
 
                 checkUrlTier(request.path, val["url"], request.app["used"])
-                # request.app["used"]["table"] = confirmSheet(_key, tables)
-                # request.app["used"]["index"] = val.get("index", "common/index.html")
-                # request.app["used"]["detail"] = val.get("detail", "common/detail.html")
-                # request.app["used"]["deep"] = val.get("deep", "common/deep.html")
-                # request.app["used"]["prefix"] = val["url"]
+                tier = request.app["used"].get("tier")
+                request.app["used"][tier] = used.get(tier)
+
                 request.app["pathsName"].append(val["title"])
                 if val.get("item") and len(val["item"]) > 0:
                     for cval in val["item"]:
@@ -168,13 +188,15 @@ def exec(flaskApp, **f):
                 print("not found 404>>>>>>>>>>>>>>>>>", path, type(error_info))
                 return render_template("templates/error.html", error=error_info)
 
-        # @flaskApp.errorhandler(Exception)
-        # def error_other(error):
-        #     """这个handler可以catch住所有的abort(500)和raise exeception."""
-        #     response = dict(status=0, message="500 Error")
-        #     if not filterPath(request):
-        #         print("other_error:", type(error), ">>>>>", error, request.path)
-        #     return render_template("templates/error.html", error=error)
+        @flaskApp.errorhandler(Exception)
+        def error_other(error):
+            """这个handler可以catch住所有的abort(500)和raise exeception."""
+            response = dict(status=0, message="500 Error")
+            if not filterPath(request):
+                raise (error)
+                print("other_error:", type(error), ">>>>>", error, request.path)
+            return json.dumps({"success": False, "msg": "500-Error：" + str(error)}) if is_xhr(
+                request) else render_template("templates/error.html", error=error)
 
     # 注意debug模式下只能在主线程中
     # app.run(host="0.0.0.0", debug=app.config["DEBUG"], port=app.config["PORT"])

@@ -60,9 +60,11 @@ class File():
         self.url = url if os.path.isfile(url) else False
         return self.url
 
-    def named(self, type):
-        type = type if type.startswith(".") else "." + type
-        return datetime.datetime.now().strftime('%Y%m%d%H%M%S') + str(random.randint(0, 999)) + type
+    def named(self, type, srcName=""):
+        type, timestamp = type if type.startswith(".") else "." + type, datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        srcName = "{0}_".format(srcName) if srcName else ""
+        # return datetime.datetime.now().strftime('%Y%m%d%H%M%S') + str(random.randint(0, 999)) + type
+        return "{0}{1}_{2}{3}".format(srcName, timestamp, str(random.randint(0, 999)), type)
 
     def outPath(self, src_dir, tar_dir):
         tar_dir = src_dir if not tar_dir else os.path.join(src_dir, tar_dir)

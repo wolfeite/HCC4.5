@@ -6,20 +6,26 @@ from libs.io import Loader
 class Requester():
     def __init__(self, request, upPaths=None):
         self.req = request
-        if request.method == "GET":
-            self.isGet = True
-            self.data = self.req.args
-        else:
-            self.isGet = False
-            self.data = self.req.form if self.req.form else self.req.json
+        self.data = self.getParams()
         self.files_names = self.getFilesNames()
         self.upPaths = upPaths
+        # print("req信息>>>>", self.req.headers, self.req.method, self.req.data, self.req.values, self.form)
+        # print(">>>>getValue>>>>", self.req.values, self.req.values.get("info"))
+
+    def getParams(self):
+        # if request.method == "GET":
+        #     self.isGet = True
+        #     self.data = self.req.args
+        # else:
+        #     self.isGet = False
+        #     self.data = self.req.form if self.req.form else self.req.json
+        res = self.req.values if self.req.values else getattr(self.req, "json", {})
+        return res if res else {}
 
     def value(self, key):
-        paramVal = self.data.get(key)
-        paramVal = self.req.args.get(key) if paramVal == None and not self.isGet else paramVal
-        if key in self.files_names:
-            paramVal = self.up(key)
+        print(">>>>>", self.data)
+        paramVal = getattr(self.data, "get")(key)
+        if key in self.files_names: paramVal = self.up(key)
         return paramVal
 
     def up(self, key):
@@ -32,15 +38,15 @@ class Requester():
             name = Loader().up(key, self.upPaths)
         else:
             pathType = Loader.upPaths.get(pathType)
+            print("上传信息：", pathType, fileType, key, self.req.files, key in self.req.files)
             if pathType:
                 name = Loader().up(key, pathType)
         return name
 
     def getFilesNames(self):
         files, names = self.req.files, []
-        if len(files) > 0:
-            for file in files:
-                names.append(file)
+        if len(files) > 0: names = [file for file in files]
+        # for file in files: names.append(file)
         return names
 
 class View():
@@ -48,14 +54,20 @@ class View():
         self.requester = Requester(request, upPaths=con.get("upPaths"))
         self.fields = fields if isinstance(fields, list) else list(fields)
         self.init(con)
-        for key in fields:
-            setattr(self, key, self.requester.value(key))
+        for key in fields: setattr(self, key, self.requester.value(key))
+
+        for i, v in self.config["extra"].items(): setattr(self, i, v)
+
+    def params(self):
+        return dict(self)
 
     def param(self, name):
-        return self.requester.value(name)
+        # 待修改
+        # return self.requester.value(name)
+        return self.params.get(name, None)
 
     def init(self, con):
-        self.config = {"pops": None}
+        self.config = {"pops": None, "extra": {}}
         self.config.update(con)
         pops = self.config["pops"]
         if pops and not isinstance(pops, (list, tuple)):

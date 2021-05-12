@@ -38,6 +38,27 @@ def config_jinja(app):
             not val == "" and res.append(val)
         return res
 
+def createChildren(db, detail, parentName, defCol):
+    detail_nm, deep = detail.get("name", "detail"), detail.get("deep")
+    detail["name"] = detail_nm
+    createMode(db, detail, defCol, ["route", parentName])
+
+    def createDeep(deepCon):
+        deep_nm = deepCon.get("name", "deep")
+        deepCon["name"] = deep_nm
+        createMode(db, deepCon, defCol, ["route", detail_nm])
+
+    if isinstance(deep, dict):
+        createDeep(deep)
+    # deep_nm = deep.get("name", "deep")
+    # deep["name"] = deep_nm
+    # createMode(db, deep, defCol, ["route", detail_nm])
+    elif isinstance(deep, (list, tuple)):
+        for v in deep: createDeep(v)
+        # deep_nm = v.get("name", "deep")
+        # v["name"] = deep_nm
+        # createMode(db, v, defCol, ["route", detail_nm])
+
 def init_app_db(db, app):
     tables = app.config.get("TABLES", {})
     defCol = {
@@ -50,14 +71,10 @@ def init_app_db(db, app):
         t_nm, detail = t.get("name", "screen"), t.get("detail")
         t["name"] = t_nm
         createMode(db, t, defCol, ["route"])
-        if detail and isinstance(detail, dict):
-            detail_nm, deep = detail.get("name", "detail"), detail.get("deep")
-            detail["name"] = detail_nm
-            createMode(db, detail, defCol, ["route", t_nm])
-            if deep and isinstance(deep, dict):
-                deep_nm = deep.get("name", "deep")
-                deep["name"] = deep_nm
-                createMode(db, deep, defCol, ["route", detail_nm])
+        if isinstance(detail, dict):
+            createChildren(db, detail, t_nm, defCol)
+        elif isinstance(detail, (list, tuple)):
+            for i, v in enumerate(detail): createChildren(db, v, t_nm, defCol)
 
     print(">>>>处理后的tables", tables)
 
@@ -75,8 +92,9 @@ def config_app(app):
     routes = app.config["ROUTES"]
     for route_key in routes:
         route = routes[route_key]
-        if not route_key in ["toJson", "toUpdate"]:
-            url_prefix, name, item = route.get("url"), route.get("name"), route.get("item", [])
+        url_prefix = route.get("url")
+        if not url_prefix in ["#"]:
+            name, item = route.get("name"), route.get("item", [])
             has_detail, has_deep = route.get("has_detail", {}), route.get("has_deep", {})
             print("注册路由》》》", name, url_prefix)
             if len(item) > 0:

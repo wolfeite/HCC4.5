@@ -62,11 +62,9 @@
             var con = $.extend({
                 type: "get", dataType: "json", url: "#", tip: false
             }, config)
-            console.log(con)
             spinner.spin(document.body);
             toastr.clear()
-            $.ajax(con).done(function (response) {
-                spinner.stop();
+            var xhr = $.ajax(con).done(function (response) {
                 var info = response.msg || '数据加载成功!'
                 console.log("同步结果：", info, response)
                 if (con.tip) {
@@ -74,12 +72,21 @@
                 }
                 resolve && resolve(response)
             }).fail(function (e) {
-                spinner.stop();
                 reject && reject(e)
                 var info = e.msg || '数据加载失败!'
                 con.tip && toastr.error(info)
                 //alert('数据加载失败!');
+            }).always(function (e) {
+                spinner.stop();
             })
+            return xhr
+        },
+        getQueryParam: function (name) {
+            //获取地址栏的查询参数
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
         },
         alertInfo: function (info, el, type, expire = 2000) {
             var style = type === 'error' ? 'alert-danger' : 'alert-success';
@@ -133,10 +140,9 @@ $(function () {
 });
 
 $(document).ready(function () {
-    url = "/api/toJson"
-    var req = function (text_suc, text_fail, cb) {
+    var req = function (url, text_suc, text_fail, cb) {
         $.request({url: url}, function (res) {
-            res.success ? toastr.success(text_suc) : toastr.error(text_fail)
+            res.success ? toastr.success(res.msg ? res.msg : text_suc) : toastr.error(res.msg ? res.msg : text_fail)
             // console.log("设备及平台模式更新成功！")
             cb && cb(res)
         })
@@ -144,7 +150,8 @@ $(document).ready(function () {
 
     var asideDev = $("#asideLeftList").children()
     $("[href='#']", asideDev).on("click", function (e) {
-        req("生成JSON成功！", "生成JSON失败！")
+        var $el = $(this), url = "/api/" + $el.attr("key");
+        req(url, "操作成功！", "操作失败！")
     })
     $("[openwin]", asideDev).on("click", function (e) {
         var el = $(this), newUrl = el.attr("openwin")

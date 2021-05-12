@@ -1,9 +1,9 @@
 {
-  "enter": "account",
+  "enter": "free",
   "title": {
-    "header": "平阳电子商务局",
-    "subhead": "智慧城市",
-    "footer": "平阳"
+    "header": "盖米阀门",
+    "subhead": "语音管理",
+    "footer": "盖米"
   },
   "assets": {
     "path": "data",
@@ -12,70 +12,74 @@
     "port": 5000
   },
   "tables": {
-    "history": {
+    "audio": {
       "name": "screen",
-      "foreign": "exhibit",
       "column": {
-        "year": "integer",
-        "date": "text",
-        "info": "text not null",
-        "ImagePath": "text",
-        "VideoPath": "text"
+        "name": "text",
+        "path": "text"
       },
-      "detail": {
-        "name": "detail",
-        "column_name": "images",
-        "foreign": [
-          "screen",
-          "exhibit"
-        ],
-        "column": {
-          "name": "text",
-          "path": "text"
-        },
-        "deep": {
-          "name": "third",
-          "column_name": "videos",
-          "foreign": [
-            "detail",
-            "exhibit"
-          ],
+      "detail": [
+        {
+          "name": "page_1",
           "column": {
             "name": "text",
-            "VideoPath": "text"
+            "path": "text"
+          },
+          "deep": [
+            {
+              "name": "deep_1",
+              "column": {
+                "name": "text",
+                "path": "text"
+              }
+            },
+            {
+              "name": "deep_3",
+              "column": {
+                "name": "text",
+                "path": "text"
+              }
+            },
+            {
+              "name": "deep_4",
+              "column": {
+                "name": "text",
+                "path": "text"
+              }
+            }
+          ]
+        },
+        {
+          "name": "page_2",
+          "column": {
+            "name": "text",
+            "path": "text"
+          },
+          "deep": {
+            "name": "deep_2",
+            "column": {
+              "name": "text",
+              "path": "text"
+            }
           }
         }
-      }
+      ]
     }
   },
   "routes": {
-    "history": {
-      "title": "大事记",
-      "url": "/history",
-      "name": "history",
+    "audio": {
+      "title": "音频",
+      "url": "/audio",
+      "name": "audio",
       "index": "common/index.html",
-      "detail": "common/detail.html"
+      "detail": {
+        "page_1": "common/detail.html",
+        "page_2": "common/detail.html"
+      }
     },
-    "news": {
-      "title": "新闻",
-      "url": "/news",
-      "item": [
-        {
-          "title": "国际",
-          "url": "/news/international",
-          "name": "international"
-        },
-        {
-          "title": "国内",
-          "url": "/news/inland"
-        }
-      ]
-    },
-    "toOther": {
-      "title": "跳转",
-      "name": "toOther",
-      "index": "intro/index.html",
-      "href": "http://192.168.9.253:5000"
+    "moveTo/screen/data/mp3": {
+      "title": "更新",
+      "url": "#"
     },
     "toJson": {
       "title": "同步",

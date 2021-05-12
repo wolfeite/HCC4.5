@@ -120,7 +120,7 @@
                                 <li class="nav-item {{ 'has-treeview' if hasItem else '' }} {{ 'menu-open' if isActive else '' }}">
                                     <a href="{{ val.url }}" class="nav-link {{ 'active' if isActive else '' }}"
                                        data-branch="{{ index }}" data-leave=0
-                                       openwin="{{ val.href if val.href else '' }}">
+                                       openwin="{{ val.href if val.href else '' }}" key="{{ val.key }}">
                                         <i class="nav-icon fas {{ 'fa-copy' if hasItem else 'fa-file' }}"></i>
                                         <p>
                                             {{ val.title }}

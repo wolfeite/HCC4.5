@@ -2,7 +2,7 @@
 {% block optDataForm %}
     {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
     {{ text(label="名字：",placeholder="示例：图片1", name="name" ) }}
-    {{ file_img(label="图片：",placeholder="请选择图片", name="path" ) }}
+    {{ file_img(label="图片：",placeholder="请选择图片", name="path") }}
 {% endblock %}
 
 {% block optJs %}
@@ -15,6 +15,23 @@
                     return value ? '<img src="' + $.url_for("image/" + value) + '" alt="" style="height:80px;">' : "无"
                 }
             }
-        ])
+        ], {
+            text: {
+                detail: {
+                    "deep_1": "党务详情",
+                    "deep_3": "党ssssss",
+                    "deep_2": "dddcds"
+                }
+            },
+            btn: {
+                "btn1": {
+                    text: "自定义按钮2",
+                    func: function (item) {
+                        {#alert(item)#}
+                        console.log(item)
+                    }
+                }
+            }
+        })
     </script>
 {% endblock %}

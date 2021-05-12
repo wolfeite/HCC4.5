@@ -1,6 +1,12 @@
 .DS_Store
 node_modules
 /dist
+/bak
+/build
+/data/statics/image
+/data/statics/video
+/data/statics/audio
+/data/mp3
 
 # local env files
 .env.local
