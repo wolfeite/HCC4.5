@@ -9,6 +9,7 @@ function combine(cols, options = {}) {
         rootArr.splice(rootArr.indexOf("detail"), 1)
         rootPrefix = rootArr.join("/")
     } else if (rootPrefix.indexOf("deep") > -1) {
+        detailName = "deep"
         var rootArr = rootPrefix.split("/")
         rootArr.splice(rootArr.indexOf("deep"), 1)
         rootPrefix = rootArr.join("/")

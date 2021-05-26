@@ -31,6 +31,29 @@
               "column": {
                 "name": "text",
                 "path": "text"
+              },
+              "deep": {
+                "name": "deep_1_cld_1",
+                "column": {
+                  "name": "text",
+                  "path": "text"
+                },
+                "deep": [
+                  {
+                    "name": "deep_1_cld_1_cld_1",
+                    "column": {
+                      "name": "text",
+                      "path": "text"
+                    }
+                  },
+                  {
+                    "name": "deep_1_cld_1_cld_2",
+                    "column": {
+                      "name": "text",
+                      "path": "text"
+                    }
+                  }
+                ]
               }
             },
             {
@@ -75,6 +98,11 @@
       "detail": {
         "page_1": "common/detail.html",
         "page_2": "common/detail.html"
+      },
+      "deep": {
+        "deep_1_cld_1": "common/deep2.html",
+        "deep_1_cld_1_cld_1": "common/deep3.html",
+        "deep_1_cld_1_cld_2": "common/deep3.html"
       }
     },
     "moveTo/screen/data/mp3": {

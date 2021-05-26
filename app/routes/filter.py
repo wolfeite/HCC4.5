@@ -107,7 +107,7 @@ def exec(flaskApp, **f):
         for val in rootAside:
             if request.path.startswith(val["url"]):
                 # tables = request.app["tables"]
-                print("使用的路由表为>>>>>", val)
+                # print("使用的路由表为>>>>>", val)
                 _key, has_detail, has_deep = val.get("key"), val["has_detail"], val["has_deep"]
                 is_detail, is_deep = True if has_detail else False, True if has_deep else False
                 temp_index, temp_detail, temp_deep = "common/index.html", "common/detail.html", "common/deep.html"
@@ -123,13 +123,15 @@ def exec(flaskApp, **f):
                 temp_index = index if isinstance(index, str) else temp_index
                 temp_detail = getTemp(detail, temp_detail, child)
                 temp_deep = getTemp(deep, temp_deep, child)
-
+                # print("has_detail>>>>>",has_detail)
+                # print("has_deep>>>>>", has_deep)
                 used = {
                     "index": {"temp": temp_index, "sheet": index_tab, "isDetail": is_detail,
                               "children": index_children},
                     "detail": {"temp": temp_detail, "sheet": detail_tab,
                                "isDetail": is_deep, "related": index_nm, "children": detail_children},
-                    "deep": {"temp": temp_deep, "sheet": deep_tab, "related": deep_tab.get("parent"), "children": []}
+                    "deep": {"temp": temp_deep, "sheet": deep_tab, "related": deep_tab.get("parent"),
+                             "isDetail": len(detail_children) > 0, "children": detail_children}
                 }
                 # request.app["used"] = {"table": index_tab, "prefix": val["url"], "tier": None}
                 request.app["used"] = {"prefix": val["url"], "tier": None}

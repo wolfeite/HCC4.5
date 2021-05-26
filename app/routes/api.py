@@ -14,6 +14,19 @@ def confirmSheet(_key, tables):
         table = list(tables.values())[0] if not table else table
     return table
 
+def getDeepData(db, url, parent_obj, parentData, parentName, orderBy):
+    deep_obj = parent_obj.get("deep", [])
+    deep_obj = deep_obj if isinstance(deep_obj, (list, tuple)) else [deep_obj]
+    if deep_obj:
+        for dv in deep_obj:
+            nm_deep = dv.get("name", "deep")
+            col_nm_deep = dv.get("column_name", nm_deep)
+            deep, url_deep = db.models[nm_deep], "{0}deep/".format(url)
+            for j, d in enumerate(parentData):
+                clause_d = "where route='{0}' and {1}={2} {3}".format(url_deep, parentName, d.get("id"), orderBy)
+                d[col_nm_deep] = deep.find("*", clause=clause_d).get("data", [])
+                getDeepData(db, url, dv, d[col_nm_deep], nm_deep, orderBy)
+
 def getData(db, table, url, orderBy):
     table_name = table.get("name", "screen")
     url = url if url.endswith("/") else "{0}/".format(url)
@@ -36,13 +49,14 @@ def getData(db, table, url, orderBy):
                 clause = "where route='{0}' and {1}={2} {3}".format(url_detail, table_name, r.get("id"), orderBy)
                 r[col_nm_detail] = detail.find("*", clause=clause).get("data", [])
 
-                for dv in deep_obj:
-                    nm_deep = dv.get("name", "deep")
-                    col_nm_deep = dv.get("column_name", nm_deep)
-                    deep, url_deep = db.models[nm_deep], "{0}deep/".format(url)
-                    for j, d in enumerate(r[col_nm_detail]):
-                        clause_d = "where route='{0}' and {1}={2} {3}".format(url_deep, nm_detail, d.get("id"), orderBy)
-                        d[col_nm_deep] = deep.find("*", clause=clause_d).get("data", [])
+                getDeepData(db, url, v, r[col_nm_detail], nm_detail, orderBy)
+                # for dv in deep_obj:
+                #     nm_deep = dv.get("name", "deep")
+                #     col_nm_deep = dv.get("column_name", nm_deep)
+                #     deep, url_deep = db.models[nm_deep], "{0}deep/".format(url)
+                #     for j, d in enumerate(r[col_nm_detail]):
+                #         clause_d = "where route='{0}' and {1}={2} {3}".format(url_deep, nm_detail, d.get("id"), orderBy)
+                #         d[col_nm_deep] = deep.find("*", clause=clause_d).get("data", [])
     return data_res
 
 def add_route(bp, **f):

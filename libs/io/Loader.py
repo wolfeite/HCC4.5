@@ -11,6 +11,7 @@ class Loader(File):
             paths = dir if isinstance(dir, (list, tuple)) else [dir]
             try:
                 fi = request.files[input_name]
+                # print("上传文件的MD5为：", self.fileMd5(fi))
                 filename = fi.filename
                 if filename == '':
                     return ""
@@ -24,6 +25,7 @@ class Loader(File):
                 print(file_path)
                 fi.save(file_path)
                 fsize = os.stat(file_path).st_size
+                print("<<上传文件大小为：>>", fsize)
                 if fsize > size * 1024 * 1024 and size != 0:
                     os.remove(file_path)
                     return ""

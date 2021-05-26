@@ -6,7 +6,9 @@ node_modules
 /data/statics/image
 /data/statics/video
 /data/statics/audio
+/data/statics/other
 /data/mp3
+/data/log
 
 # local env files
 .env.local

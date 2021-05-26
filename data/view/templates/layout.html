@@ -229,10 +229,13 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            {% for pName in pathsName %}
-                                <li class="breadcrumb-item"><a href="#">{{ pName }}</a>
-                                </li>
-                            {% endfor %}
+                            <li class="breadcrumb-item">
+                                <a href="javascript:0;" onclick="window.location.href='javascript:history.go(-1)'">返回</a>
+                            </li>
+{#                            {% for pName in pathsName %}#}
+{#                                <li class="breadcrumb-item"><a href="#">{{ pName }}</a>#}
+{#                                </li>#}
+{#                            {% endfor %}#}
                             {#                            <li class="breadcrumb-item active">{{ request.app["pathsName"] }}</li>#}
                         </ol>
                     </div>

@@ -38,23 +38,32 @@ def config_jinja(app):
             not val == "" and res.append(val)
         return res
 
-def createChildren(db, detail, parentName, defCol):
-    detail_nm, deep = detail.get("name", "detail"), detail.get("deep")
-    detail["name"] = detail_nm
-    createMode(db, detail, defCol, ["route", parentName])
+def createChildrenMode(db, child, parentName, defCol, defName=""):
+    parent_nm, deep = child.get("name", defName), child.get("deep")
+    child["name"] = parent_nm
+    createMode(db, child, defCol, ["route", parentName])
+    return deep
 
-    def createDeep(deepCon):
-        deep_nm = deepCon.get("name", "deep")
-        deepCon["name"] = deep_nm
-        createMode(db, deepCon, defCol, ["route", detail_nm])
+def createChildren(db, child, parentName, defCol, defName=""):
+    deep = createChildrenMode(db, child, parentName, defCol, defName=defName)
+    # detail_nm, deep = detail.get("name", "detail"), detail.get("deep")
+    # detail["name"] = detail_nm
+    # createMode(db, detail, defCol, ["route", parentName])
+
+    # def createDeep(deepCon):
+    # deep_nm = deepCon.get("name", "deep")
+    # deepCon["name"] = deep_nm
+    # createMode(db, deepCon, defCol, ["route", detail_nm])
 
     if isinstance(deep, dict):
-        createDeep(deep)
-    # deep_nm = deep.get("name", "deep")
-    # deep["name"] = deep_nm
-    # createMode(db, deep, defCol, ["route", detail_nm])
+        # createDeep(deep)
+        createChildren(db, deep, child["name"], defCol, defName="deep")
+        # deep_nm = deep.get("name", "deep")
+        # deep["name"] = deep_nm
+        # createMode(db, deep, defCol, ["route", detail_nm])
     elif isinstance(deep, (list, tuple)):
-        for v in deep: createDeep(v)
+        for i, v in enumerate(deep): createChildren(db, v, child["name"], defCol, defName="deep_{0}".format(i))
+        # for v in deep: createDeep(v)
         # deep_nm = v.get("name", "deep")
         # v["name"] = deep_nm
         # createMode(db, v, defCol, ["route", detail_nm])
@@ -72,9 +81,9 @@ def init_app_db(db, app):
         t["name"] = t_nm
         createMode(db, t, defCol, ["route"])
         if isinstance(detail, dict):
-            createChildren(db, detail, t_nm, defCol)
+            createChildren(db, detail, t_nm, defCol, defName="detail")
         elif isinstance(detail, (list, tuple)):
-            for i, v in enumerate(detail): createChildren(db, v, t_nm, defCol)
+            for i, v in enumerate(detail): createChildren(db, v, t_nm, defCol, defName="detail_{0}".format(i))
 
     print(">>>>处理后的tables", tables)
 

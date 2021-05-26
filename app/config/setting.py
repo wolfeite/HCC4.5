@@ -70,26 +70,41 @@ def confirmChildren(child):
         for k, v in enumerate(child): res.update(confirmChildren(v))
     return res
 
+def createDeepHas(parent):
+    hasDeep = {}
+    for k, v in parent.items():
+        children = v.get("deep", {})
+        if children:
+            deeps = confirmChildren(children)
+            for _k_ in deeps:
+                deep = deeps[_k_]
+                # grandpa = v.get("parent")
+                # deep["grandpa"] = "{0}.{1}".format(grandpa, k) if grandpa else k
+                # grandpa = [g_v for g_v in v.get("grandpa", [])]
+                deep["parent"] = k
+                # grandpa.append(k)
+                deep["grandpa"] = [g_v for g_v in v.get("grandpa", [])] + [k]
+
+            grandchildren = createDeepHas(deeps)
+            deeps.update(grandchildren)
+            hasDeep.update(deeps)
+    return hasDeep
+
 for key_item in ROUTES:
     route = ROUTES[key_item]
     prefix(key_item, route)
     table = confirmSheet(key_item, TABLES)
     route["table"], detail = table, table.get("detail", False)
-    # route["has_detail"] = detail if detail else {}
-    # route["has_deep"] = {}
-    # if detail:
-    #     deep = detail.get("deep", {})
-    #     route["has_deep"] = deep if deep else {}
 
     detail = confirmChildren(detail)
     route["has_detail"] = detail
-    route["has_deep"] = {}
-    for k, v in detail.items():
-        deep = v.get("deep", {})
-        if deep:
-            deep = confirmChildren(deep)
-            for _k_ in deep: deep[_k_]["parent"] = k
-            route["has_deep"].update(deep)
+    route["has_deep"] = createDeepHas(detail)
+    # for k, v in detail.items():
+    #     deep = v.get("deep", {})
+    #     if deep:
+    #         deep = confirmChildren(deep)
+    #         for _k_ in deep: deep[_k_]["parent"] = k
+    #         route["has_deep"].update(deep)
     item = route.get("item", [])
     if len(item) > 0:
         for r in item:

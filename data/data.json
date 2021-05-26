@@ -1,178 +1,119 @@
 {
     "audio": [
         {
-            "id": 51,
+            "id": 1,
             "number": 1,
             "route": "/audio/",
-            "name": "2",
-            "path": "",
-            "page_1": [],
-            "page_2": []
-        },
-        {
-            "id": 46,
-            "number": 2,
-            "route": "/audio/",
-            "name": "1ss",
-            "path": "",
+            "name": "1",
+            "path": "flyer_pd技术灌装阀_20210513150140_434.pdf",
             "page_1": [
                 {
-                    "id": 12,
+                    "id": 1,
                     "number": 1,
                     "route": "/audio/detail/",
-                    "name": "LL",
-                    "path": "1_20210506220917_696.jpg",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 11,
-                    "number": 1,
-                    "route": "/audio/detail/",
-                    "name": "12W",
-                    "path": "测试页面_20210506143852_628.png",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 10,
-                    "number": 1,
-                    "route": "/audio/detail/",
-                    "name": "1",
-                    "path": "测试页面_20210506143158_705.png",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 2,
-                    "number": 1,
-                    "route": "/audio/detail/",
-                    "name": "2222",
-                    "path": "",
-                    "screen": 46,
+                    "name": "1-1",
+                    "path": "2_20210509180520_573.jpg",
+                    "screen": 1,
                     "deep_1": [
                         {
-                            "id": 1,
-                            "number": 11,
+                            "id": 4,
+                            "number": 1,
                             "route": "/audio/deep/",
-                            "name": "1111",
-                            "path": null,
-                            "page_1": 2
+                            "name": "1",
+                            "path": "cd1_20210513150631_983.mp4",
+                            "page_1": 1,
+                            "deep_1_cld_1": [
+                                {
+                                    "id": 1,
+                                    "number": 1,
+                                    "route": "/audio/deep/",
+                                    "name": "1_1_1",
+                                    "path": "",
+                                    "deep_1": 4,
+                                    "deep_1_cld_1_cld_1": [
+                                        {
+                                            "id": 1,
+                                            "number": 1,
+                                            "route": "/audio/deep/",
+                                            "name": "1_1--1",
+                                            "path": "",
+                                            "deep_1_cld_1": 1
+                                        }
+                                    ],
+                                    "deep_1_cld_1_cld_2": [
+                                        {
+                                            "id": 1,
+                                            "number": 1,
+                                            "route": "/audio/deep/",
+                                            "name": "1_1_2",
+                                            "path": "",
+                                            "deep_1_cld_1": 1
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": 5,
+                            "number": 2,
+                            "route": "/audio/deep/",
+                            "name": "22",
+                            "path": "1-1【更多IT资源加微信wxdhhfy】_20210513151541_49.mp4",
+                            "page_1": 1,
+                            "deep_1_cld_1": []
+                        },
+                        {
+                            "id": 9,
+                            "number": "",
+                            "route": "/audio/deep/",
+                            "name": "",
+                            "path": "cd1_20210513152225_126.mp4",
+                            "page_1": 1,
+                            "deep_1_cld_1": []
+                        },
+                        {
+                            "id": 8,
+                            "number": "",
+                            "route": "/audio/deep/",
+                            "name": "",
+                            "path": "",
+                            "page_1": 1,
+                            "deep_1_cld_1": []
+                        },
+                        {
+                            "id": 7,
+                            "number": "",
+                            "route": "/audio/deep/",
+                            "name": "",
+                            "path": "[S01E01]太空部队.Space.Force.S01E01.1080p.WEB.AC3.x264-摆渡字幕组_20210513151946_906.mp4",
+                            "page_1": 1,
+                            "deep_1_cld_1": []
+                        },
+                        {
+                            "id": 6,
+                            "number": "",
+                            "route": "/audio/deep/",
+                            "name": "",
+                            "path": "1-1【更多IT资源加微信wxdhhfy】_20210513151825_203.mp4",
+                            "page_1": 1,
+                            "deep_1_cld_1": []
                         }
                     ],
                     "deep_3": [],
                     "deep_4": []
                 },
                 {
-                    "id": 3,
-                    "number": 33,
+                    "id": 2,
+                    "number": 2,
                     "route": "/audio/detail/",
-                    "name": "33",
-                    "path": "",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 6,
-                    "number": 44,
-                    "route": "/audio/detail/",
-                    "name": "222",
-                    "path": "",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 9,
-                    "number": 123,
-                    "route": "/audio/detail/",
-                    "name": "123",
-                    "path": "测试页面.png_20210506142755_815.png",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 7,
-                    "number": 133,
-                    "route": "/audio/detail/",
-                    "name": "222",
-                    "path": "_20210506142317_255.png",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 8,
-                    "number": 453,
-                    "route": "/audio/detail/",
-                    "name": "234",
-                    "path": "20210506142539_244.jpg",
-                    "screen": 46,
-                    "deep_1": [],
-                    "deep_3": [],
-                    "deep_4": []
-                },
-                {
-                    "id": 4,
-                    "number": 3334,
-                    "route": "/audio/detail/",
-                    "name": "222",
-                    "path": "20210505174255324.jpg",
-                    "screen": 46,
+                    "name": "1-2",
+                    "path": "1_20210509180421_453.jpg",
+                    "screen": 1,
                     "deep_1": [],
                     "deep_3": [],
                     "deep_4": []
                 }
             ],
-            "page_2": [
-                {
-                    "id": 1,
-                    "number": 12,
-                    "route": "/audio/detail/",
-                    "name": "212",
-                    "path": "",
-                    "screen": 46,
-                    "deep_2": []
-                }
-            ]
-        },
-        {
-            "id": 48,
-            "number": 3,
-            "route": "/audio/",
-            "name": "",
-            "path": "20210118162116923.wav",
-            "page_1": [],
-            "page_2": []
-        },
-        {
-            "id": 50,
-            "number": 4,
-            "route": "/audio/",
-            "name": "222",
-            "path": "",
-            "page_1": [],
-            "page_2": []
-        },
-        {
-            "id": 49,
-            "number": 5,
-            "route": "/audio/",
-            "name": "dcc",
-            "path": "20210118162812878.wav",
-            "page_1": [],
             "page_2": []
         }
     ]
