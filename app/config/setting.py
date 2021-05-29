@@ -90,25 +90,37 @@ def createDeepHas(parent):
             hasDeep.update(deeps)
     return hasDeep
 
+def setTableInfo(name, tables):
+    table = confirmSheet(name, tables)
+    detail = confirmChildren(table.get("detail", False))
+    deep = createDeepHas(detail)
+    return (table, detail, deep)
+
 for key_item in ROUTES:
     route = ROUTES[key_item]
     prefix(key_item, route)
-    table = confirmSheet(key_item, TABLES)
-    route["table"], detail = table, table.get("detail", False)
+    info = setTableInfo(key_item, TABLES)
+    route["table"], route["has_detail"], route["has_deep"] = info
+    index, detail, deep = route.get("index"), route.get("detail"), route.get("deep")
+    # table = confirmSheet(key_item, TABLES)
+    # route["table"], detail = table, table.get("detail", False)
+    #
+    # detail = confirmChildren(detail)
+    # route["has_detail"] = detail
+    # route["has_deep"] = createDeepHas(detail)
 
-    detail = confirmChildren(detail)
-    route["has_detail"] = detail
-    route["has_deep"] = createDeepHas(detail)
-    # for k, v in detail.items():
-    #     deep = v.get("deep", {})
-    #     if deep:
-    #         deep = confirmChildren(deep)
-    #         for _k_ in deep: deep[_k_]["parent"] = k
-    #         route["has_deep"].update(deep)
+    route["item_list"] = {}
     item = route.get("item", [])
     if len(item) > 0:
         for r in item:
             prefix(None, r)
+            i_tab_name = r.get("table")
+            r["table"], r["has_detail"], r["has_deep"] = setTableInfo(i_tab_name, TABLES) if i_tab_name else info
+            i_tem, d_tem, dp_tem = r.get("index"), r.get("detail"), r.get("deep")
+            r["index"] = i_tem if i_tem else index
+            r["detail"] = d_tem if d_tem else detail
+            r["deep"] = dp_tem if dp_tem else deep
+            # print("item>>>", r)
     ASIDE.append(route)
 INDEX_URL = ASIDE[0].get("url", "#")
 INDEX_ITEM = ASIDE[0].get("item", [])

@@ -106,9 +106,25 @@ def exec(flaskApp, **f):
 
         for val in rootAside:
             if request.path.startswith(val["url"]):
+                _key = val.get("key")
+                request.app["used"] = {"prefix": val["url"], "tier": None}
+                request.app["pathsName"].append(val["title"])
+
+                if val.get("item") and len(val["item"]) > 0:
+                    for cval in val["item"]:
+                        if request.path.startswith(cval["url"]):
+                            # checkUrlTier(request.path, cval["url"], request.app["used"])
+                            # tier = request.app["used"].get("tier")
+                            # request.app["used"][tier] = used.get(tier)
+                            request.app["pathsName"].append(cval["title"])
+                            val = cval
+                            break
+
+                checkUrlTier(request.path, val["url"], request.app["used"])
+
                 # tables = request.app["tables"]
                 # print("使用的路由表为>>>>>", val)
-                _key, has_detail, has_deep = val.get("key"), val["has_detail"], val["has_deep"]
+                has_detail, has_deep = val["has_detail"], val["has_deep"]
                 is_detail, is_deep = True if has_detail else False, True if has_deep else False
                 temp_index, temp_detail, temp_deep = "common/index.html", "common/detail.html", "common/deep.html"
 
@@ -125,7 +141,7 @@ def exec(flaskApp, **f):
                 temp_deep = getTemp(deep, temp_deep, child)
                 # print("has_detail>>>>>",has_detail)
                 # print("has_deep>>>>>", has_deep)
-                used = {
+                used_list = {
                     "index": {"temp": temp_index, "sheet": index_tab, "isDetail": is_detail,
                               "children": index_children},
                     "detail": {"temp": temp_detail, "sheet": detail_tab,
@@ -134,17 +150,19 @@ def exec(flaskApp, **f):
                              "isDetail": len(detail_children) > 0, "children": detail_children}
                 }
                 # request.app["used"] = {"table": index_tab, "prefix": val["url"], "tier": None}
-                request.app["used"] = {"prefix": val["url"], "tier": None}
 
-                checkUrlTier(request.path, val["url"], request.app["used"])
+                # checkUrlTier(request.path, val["url"], request.app["used"])
                 tier = request.app["used"].get("tier")
-                request.app["used"][tier] = used.get(tier)
+                request.app["used"][tier] = used_list.get(tier)
 
-                request.app["pathsName"].append(val["title"])
-                if val.get("item") and len(val["item"]) > 0:
-                    for cval in val["item"]:
-                        checkUrlTier(request.path, cval["url"], request.app["used"])
-                        request.path.startswith(cval["url"]) and request.app["pathsName"].append(cval["title"])
+                # request.app["pathsName"].append(val["title"])
+
+                # if val.get("item") and len(val["item"]) > 0:
+                #     for cval in val["item"]:
+                #         checkUrlTier(request.path, cval["url"], request.app["used"])
+                #         tier = request.app["used"].get("tier")
+                #         request.app["used"][tier] = used.get(tier)
+                #         request.path.startswith(cval["url"]) and request.app["pathsName"].append(cval["title"])
                 print(request.path, ">>>>>>采用的used为：", _key, request.app["used"])
                 break
 

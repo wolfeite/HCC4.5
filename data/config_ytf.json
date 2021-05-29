@@ -1,0 +1,151 @@
+{
+    "Resolution": "1920,1080",
+    "ReferenceResolution": true,
+    "Scene": {
+        "Pages": [
+            {
+                "Name": "控制首页",
+                "Type": 0,
+                "Bg": "1.jpg",
+                "BtnGroups": [
+                    {
+                        "Type": "一键开馆",
+                        "PosRateX": 0.1,
+                        "PosRateY": 0.1,
+                        "Bg": "",
+                        "Btns": [
+                            {
+                                "Id": 1,
+                                "Type": "Red",
+                                "Name": "",
+                                "PosRateX": 0.1,
+                                "PosRateY": 0.1,
+                                "Bg": "",
+                                "OnImg": "",
+                                "OffImg": "",
+                                "Color": "",
+                                "Codes": [
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, ff,00,ff,00','it':'0409','delay':'0.5'}",
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, 11,00,ff,00','it':'0409','delay':'1'}"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "Type": "一键闭馆",
+                        "PosRateX": 0.9,
+                        "PosRateY": 0.1,
+                        "Bg": "",
+                        "Btns": [
+                            {
+                                "Id": 1,
+                                "Type": "Red",
+                                "Name": "",
+                                "PosRateX": 0.1,
+                                "PosRateY": 0.1,
+                                "Bg": "",
+                                "OnImg": "",
+                                "OffImg": "",
+                                "Color": "",
+                                "Codes": [
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, ff,00,ff,00','it':'0409','delay':'0.5'}",
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, 11,00,ff,00','it':'0409','delay':'1'}"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "内容播放",
+                "Type": 1,
+                "Bg": "",
+                "BtnGroups": [
+                    {
+                        "Type": "",
+                        "PosRateX": 0.1,
+                        "PosRateY": 0.1,
+                        "Bg": "",
+                        "Btns": [
+                            {
+                                "Id": 1,
+                                "Type": "Red",
+                                "Name": "",
+                                "PosRateX": 0.1,
+                                "PosRateY": 0.1,
+                                "bg": "",
+                                "onImg": "",
+                                "offImg": "",
+                                "color": "",
+                                "codes": [
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, ff,00,ff,00','it':'0409'}",
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, 11,00,ff,00','it':'0409'}"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "灯光管理",
+                "Type": 2,
+                "Bg": "",
+                "BtnGroups": [
+                    {
+                        "Type": "",
+                        "PosRateX": 0.1,
+                        "PosRateY": 0.1,
+                        "Bg": "",
+                        "Btns": [
+                            {
+                                "Id": 1,
+                                "Type": "Red",
+                                "Name": "",
+                                "PosRateX": 0.1,
+                                "PosRateY": 0.1,
+                                "Bg": "",
+                                "OnImg": "",
+                                "OffImg": "",
+                                "Color": "",
+                                "Codes": [
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, ff,00,ff,00','it':'0409','delay':'0.5'}",
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, 11,00,ff,00','it':'0409','delay':'1'}"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "设备管理",
+                "Type": 3,
+                "Bg": "",
+                "BtnGroups": [
+                    {
+                        "Type": "",
+                        "PosRateX": 0.1,
+                        "PosRateY": 0.1,
+                        "Bg": "",
+                        "Btns": [
+                            {
+                                "Id": 1,
+                                "Type": "Red",
+                                "Name": "",
+                                "PosRateX": 0.1,
+                                "PosRateY": 0.1,
+                                "Bg": "",
+                                "OnImg": "",
+                                "OffImg": "",
+                                "Color": "",
+                                "Codes": [
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, ff,00,ff,00','it':'0409','delay':'0.5'}",
+                                    "{'type':'dev','nm':'admin','dev':'DevOnOff','code':'AA, 02,00, 04,09, 01, 04,09, 11,00,ff,00','it':'0409','delay':'1'}"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

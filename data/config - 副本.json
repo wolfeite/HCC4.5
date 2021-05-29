@@ -87,13 +87,6 @@
           }
         }
       ]
-    },
-    "red": {
-      "name": "red",
-      "column": {
-        "name": "text",
-        "path": "text"
-      }
     }
   },
   "routes": {
@@ -110,7 +103,7 @@
         {
           "title": "红外/串口",
           "url": "/order/com",
-          "table": "red"
+          "table": "add"
         },
         {
           "title": "PC",

@@ -1,9 +1,9 @@
 {
   "enter": "free",
   "title": {
-    "header": "中控指令系统",
-    "subhead": "指令控制_4.0",
-    "footer": "指令集"
+    "header": "盖米阀门",
+    "subhead": "语音管理",
+    "footer": "盖米"
   },
   "assets": {
     "path": "data",
@@ -87,44 +87,22 @@
           }
         }
       ]
-    },
-    "red": {
-      "name": "red",
-      "column": {
-        "name": "text",
-        "path": "text"
-      }
     }
   },
   "routes": {
     "audio": {
-      "title": "指令配置",
-      "url": "/order",
-      "name": "order",
-      "index": "order/index.html",
-      "item": [
-        {
-          "title": "继电器",
-          "url": "/order/elc"
-        },
-        {
-          "title": "红外/串口",
-          "url": "/order/com",
-          "table": "red"
-        },
-        {
-          "title": "PC",
-          "url": "/order/pc"
-        }
-      ],
+      "title": "音频",
+      "url": "/audio",
+      "name": "audio",
+      "index": "common/index.html",
       "detail": {
-        "page_1": "order/detail.html",
-        "page_2": "order/detail.html"
+        "page_1": "common/detail.html",
+        "page_2": "common/detail.html"
       },
       "deep": {
-        "deep_1_cld_1": "order/deep2.html",
-        "deep_1_cld_1_cld_1": "order/deep3.html",
-        "deep_1_cld_1_cld_2": "order/deep3.html"
+        "deep_1_cld_1": "common/deep2.html",
+        "deep_1_cld_1_cld_1": "common/deep3.html",
+        "deep_1_cld_1_cld_2": "common/deep3.html"
       }
     },
     "moveTo/screen/data/mp3": {
