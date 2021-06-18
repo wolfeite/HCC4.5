@@ -33,6 +33,7 @@
             display: none;
         }
     </style>
+    {% block optCss %}{% endblock %}
 {% endblock %}
 {% block content %}
     <!-- Main content -->
@@ -89,13 +90,16 @@
     {% from "templates/operateModal.html" import addModal,updateModal,delModal %}
     {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
     {% macro formModal(prefix="_") %}
+        {% block optBefore %}{% endblock %}
         <form role="form" action="#" enctype="multipart/form-data" method="post">
             {{ hides(args=foreign,others=["id"]) }}
             <div class="card-body">
+                {% block optBtn %}{% endblock %}
                 {{ text(label="序号：",placeholder="示例：1", name="number" ) }}
                 {% block optDataForm %}{% endblock %}
             </div>
         </form>
+        {% block optAfter %}{% endblock %}
     {% endmacro %}
 
     {% call addModal() %}

@@ -106,14 +106,15 @@ def config_app(app):
             name, item = route.get("name"), route.get("item", [])
             has_detail, has_deep = route.get("has_detail", {}), route.get("has_deep", {})
             print("注册路由》》》", name, url_prefix)
+            register_router_common(app, name, url_prefix, has_detail, has_deep)
             if len(item) > 0:
                 for r in item:
                     name, url_prefix, = r.get("name"), r.get("url")
                     print("注册item中的路由》》》", name, url_prefix)
                     register_router_common(app, name, url_prefix, has_detail, has_deep)
                     # app.register_router(name, __name__, common.add_route, url_prefix=url_prefix)
-            else:
-                register_router_common(app, name, url_prefix, has_detail, has_deep)
+            # else:
+            #     register_router_common(app, name, url_prefix, has_detail, has_deep)
                 # app.register_router(name, __name__, common.add_route, url_prefix=url_prefix)
 
     # app.register_router("perfect", __name__, common.add_route, url_prefix="/perfect")

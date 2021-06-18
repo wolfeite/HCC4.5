@@ -1,5 +1,5 @@
 function createCommon(columns, url, params, opt_btn = {}, opts = {
-    add: {}, update: {}, del: {}, pops: [], text: {}, btn: {}
+    add: {}, update: {}, del: {}, pops: [], text: {}, btn: {}, children: []
 }) {
     !opt_btn.add && $("#addBtn").css("display", "none")
 
@@ -161,7 +161,7 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
                         var $el_btn = $(this), type_btn = $el_btn.data("type")
                         if (type_btn == "update") {
                             updateForm[0].reset()
-                            opts.update.set && opts.update.set(item)
+                            opts.update.set && opts.update.set(item, updateForm)
                             var media = updateForm.find("[name='preVideo'],[name='preAudio'],[name='preImage']")
                             media.css("display", "none").attr('src', '')
                             if (media.length > 0) {
@@ -211,8 +211,9 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
                             setForm(delForm, item)
                         } else if (type_btn == "detail") {
                             var exec = opt_btn.detail, child = $el_btn.data("child")
+                            var exh = exhibitor.attr("display"), exhVal = exh == "none" ? false : exhibitor.val()
                             if (exec) {
-                                window.location.href = exec(item, child)
+                                window.location.href = exec(item, child, exhVal)
                             }
                         } else if (type_btn == "custom") {
                             var custom_key = $el_btn.data("custom"), exec = opts.btn[custom_key]["func"]
@@ -251,10 +252,10 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
         }
     }
     //点击添加按钮时操作
-    // $("#addBtn").on("click", function () {
-    //     addForm[0].reset()
-    //     addForm.find("[name='preVideo'],[name='preAudio'],[name='preImage']").css("display", "none").attr('src', '')
-    // })
+    $("#addBtn").on("click", function () {
+        addForm[0].reset()
+        opts.add.set && opts.add.set(addForm)
+    })
     //点击保存按钮
 
     //点击取消按钮执行
@@ -369,7 +370,7 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
     addOpt.on("click", function (e) {
         // var params = addForm.serialize()
         var params = new FormData(addForm.get(0));
-        opts.add.pre && opts.add.pre(params)
+        opts.add.pre && opts.add.pre(params, addForm)
         pops(params)
 
         addOpt.xhr = $.request({
@@ -392,7 +393,7 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
     updateOpt.on("click", function (e) {
         // var params = updateForm.serialize()
         var params = new FormData(updateForm.get(0));
-        opts.update.pre && opts.update.pre(params)
+        opts.update.pre && opts.update.pre(params, updateForm)
         pops(params)
 
         updateOpt.xhr = $.request({
@@ -414,7 +415,7 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
     //删除
     delOpt.on("click", function (e) {
         var params = delForm.serialize()
-        opts.del.pre && opts.del.pre(params)
+        opts.del.pre && opts.del.pre(params, delForm)
 
         $.request({url: url.del, data: params, type: "post", tip: true}, function (res) {
             controller.clients = res.data
@@ -424,4 +425,8 @@ function createCommon(columns, url, params, opt_btn = {}, opts = {
         })
     })
 
+    return function () {
+        return {controller: controller, fields: fields, grid: gridList}
+    }
 }
+

@@ -15,12 +15,19 @@
     {% endif %}
 {% endmacro %}
 
-{% macro text(label='',name='',value='',placeholder="",route="") %}
+{% macro text(label='',name='',value='',placeholder="",route="",disabled=false) %}
     <div class="form-group row" {{ "route="+route if route else "" }}>
         <label class="col-sm-3 col-form-label">{{ label }}</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control"
-                   placeholder={{ placeholder if placeholder else "请输入" }} value="{{ value }}" name="{{ name }}">
+            {% if disabled %}
+                <input type="text" class="form-control"
+                       placeholder={{ placeholder if placeholder else "请输入" }} value="{{ value }}" name="{{ name }}"
+                       disabled>
+            {% else %}
+                <input type="text" class="form-control"
+                       placeholder={{ placeholder if placeholder else "请输入" }} value="{{ value }}" name="{{ name }}">
+            {% endif %}
+
         </div>
     </div>
 {% endmacro %}

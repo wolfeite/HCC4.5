@@ -1,37 +1,81 @@
-{% extends "web/template.html" %}
+{% extends "web/template/regular.html" %}
+
+{% block optCss %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/json-viewer/jquery.json-viewer.css') }}">
+    <style></style>
+{% endblock %}
+
+{% block viewBefore %}
+    <h3 id="cmdTitle"></h3>
+{% endblock %}
+
+{% block btns %}
+    <div class="input-group-append">
+        <button type="button" class="btn btn-block btn-default btn-sm" id="viewBtn"
+                data-toggle="modal" data-target="#viewModal"><i class="fas fa-eye"></i>
+            查看JSON
+        </button>
+    </div>
+    <div class="input-group-append">
+        <button type="button" class="btn btn-block btn-default btn-sm" id="saveBtn"><i class="fas fa-save"></i>
+            保存本页
+        </button>
+    </div>
+{% endblock %}
+
 {% block optDataForm %}
     {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
-    {{ text(label="名字：",placeholder="示例：图片1", name="name" ) }}
-    {{ file_img(label="图片：",placeholder="请选择图片", name="path") }}
+    {{ text(label="名称：",placeholder="示例：标识", name="name" ) }}
+    {{ text(label="关键字：",placeholder="示例：tag", name="key" ) }}
+    {{ text(label="值：",placeholder="默认值", name="value" ) }}
+    {#    {{ file_img(label="图片：",placeholder="请选择图片", name="path") }}#}
 {% endblock %}
 
 {% block optJs %}
+    <script src="{{ url_for('static',filename='plugins/json-viewer/jquery.json-viewer.js') }}"></script>
     <script>
-        combine([
-            {name: "name", type: "text", width: 50, align: "center", title: "名称"},
-            {
-                name: "path", type: "text", width: 100, align: "center", title: "图片",
-                itemTemplate: function (value, item) {
-                    return value ? '<img src="' + $.url_for("image/" + value) + '" alt="" style="height:80px;">' : "无"
-                }
-            }
-        ], {
-            text: {
-                detail: {
-                    "deep_1": "党务详情",
-                    "deep_3": "党ssssss",
-                    "deep_2": "dddcds"
-                }
-            },
-            btn: {
-                "btn1": {
-                    text: "自定义按钮2",
-                    func: function (item) {
-                        {#alert(item)#}
-                        console.log(item)
-                    }
-                }
-            }
+        var totalViewer = $("#viewBtn"), options = {collapsed: false, withQuotes: false};
+        var viewOpt = $("#viewOpt"), saveBtn = $("#saveBtn"), cmdTitle = $("#cmdTitle")
+        cmdTitle.html($(".content-wrapper .content-header h1").html())
+
+        saveBtn.on("click", function (e) {
+            var value = formatCmd(grid().controller.clients), path = $.getQueryParam("path"),
+                id = $.getQueryParam("id")
+            var url = $.parseUrl()[0] + path + "update", params = {"id": id, "ruler": JSON.stringify(value)}
+            console.log(">>>parse Url>>>", url, params)
+            $.request({url: url, data: params, type: "post", tip: true}, function (res) {
+                console.log(res)
+            })
         })
+
+        function formatCmd(data) {
+            //let data = grid().controller.clients
+            var res = {}
+            for (let i in data) {
+                let cmd = data[i], key = cmd.key
+                res[key] = cmd.value
+            }
+            return res
+        }
+
+        totalViewer.on("click", function (e) {
+            var res = formatCmd(grid().controller.clients)
+            $('#viewModal .view-body').jsonViewer(res, options);
+        })
+        viewOpt.on("click", function () {
+            $("#viewOptClose").trigger("click")
+        })
+
+        var grid = combine([
+            {name: "name", type: "text", width: 50, align: "center", title: "名称"},
+
+            {name: "key", type: "text", width: 100, align: "center", title: "关键字"},
+            {
+                name: "value", type: "text", width: 100, align: "center", title: "值",
+                itemTemplate: function (value, item) {
+                    return value ? value : "无"
+                }
+            }
+        ])
     </script>
 {% endblock %}

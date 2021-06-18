@@ -2,7 +2,7 @@ import json
 from libs.io import File, Json
 from libs.util import Path
 from app.models.Common import factoryDB
-import os, shutil
+import os, shutil, requests
 from flask import request
 from libs.analyser.Viewer import Requester
 from app.models.pattern import ViewModel
@@ -125,6 +125,76 @@ def add_route(bp, **f):
         # 表单上传并入数据表
         db, orderBy, rt = request.app.get("db"), "order by number ASC,id DESC", {"route": "/{0}/".format(table)}
         res = ViewModel(db, table, request, pops="id", extra=rt).insert(orderBy=orderBy) if table in db.models else {}
+        return json.dumps(res)
+
+    @bp.route("/orderJson/<path:table>", methods=["POST", "GET"])
+    def orderJson(table):
+        db, args, orderBy = request.app.get("db"), request.args, "order by number ASC,id DESC"
+        # data = requests.get("http://{0}/api/query/{1}".format(request.host, table)).json()
+        data_cmd = db.models[table].find("*", clause=orderBy).get("data", [])
+        res, base = {"success": False}, Json(("data", "order.json"))
+        resData = {"commands": {}, "human": {}, "request": {}}
+        baseData = base.result
+
+        mapping = {
+            "server": {"ws": "wss", "tcp": "ts", "udp": "us"},
+            "client": {"ws": "wsc", "tcp": "tc", "udp": "uc"},
+            "value": ["ip", "port", "tag", "manner", "opts", "addition"]
+        }
+        items, data_ser = {}, db.models["services"].find("*", clause=orderBy).get("data", [])
+        for index, v in enumerate(data_ser):
+            r = v.get("route")
+            key_cal = "localhost" if "server" in r else "host"
+            items[key_cal] = items.get(key_cal, {})
+            type, modal = v["type"], v["modal"]
+            key, option = mapping[type][modal], {}
+
+            print("key", key_cal, key)
+            items[key_cal][key] = items[key_cal].get(key, {})
+            val = items[key_cal][key]
+            print("val", val)
+            items[key_cal][key] = [val] if val and isinstance(val, dict) else val
+
+            for k in mapping["value"]:
+                try:
+                    _val_ = json.loads(v[k])
+                except Exception as e:
+                    _val_ = v[k]
+
+                if k == "opts" or k == "addition":
+                    if isinstance(_val_, dict): option.update(_val_)
+                else:
+                    option[k] = _val_
+            if isinstance(items[key_cal][key], dict):
+                items[key_cal][key] = option
+            else:
+                items[key_cal][key].append(option)
+        baseData.update(items)
+
+        for i, val in enumerate(data_cmd):
+            r = val.get("route")
+            rData = resData["commands"] if "third" in r else resData["human"]
+            try:
+                rData[val["key"]] = json.loads(val["value"])
+            except Exception as e:
+                rData[val["key"]] = val["value"]
+        baseData.update(resData)
+
+        base.write("order.json", baseData)
+
+        data_app = db.models["app"].find("*", clause=orderBy).get("data", [])
+        base_app, btns = Json(("data", "app.json")), {"btns": []}
+        for j, v in enumerate(data_app):
+            btn = {}
+            btn.update(v)
+            btn["codes"] = json.loads(v["codes"])
+            btns["btns"].append(btn)
+
+        base_app_data = base_app.result
+        base_app_data.update(btns)
+        base_app.write("app.json", base_app_data)
+
+        res = {"success": True, "msg": "保存成功"}
         return json.dumps(res)
 
     @bp.route("/test", methods=["POST", "GET"])

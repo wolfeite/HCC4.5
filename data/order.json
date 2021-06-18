@@ -1,0 +1,228 @@
+{
+    "host": {
+        "wsc": {
+            "ip": "192.168.9.182",
+            "port": 3000,
+            "tag": "emit",
+            "manner": "hex",
+            "login": {
+                "type": "conn",
+                "nm": "voicer"
+            }
+        },
+        "uc": [
+            {
+                "ip": "192.168.9.11",
+                "port": 60000,
+                "tag": "upd1",
+                "manner": "hex"
+            },
+            {
+                "ip": "192.168.9.12",
+                "port": 61000,
+                "tag": "upd2",
+                "manner": "str"
+            }
+        ],
+        "tc": [
+            {
+                "ip": "192.168.9.15",
+                "port": 5555,
+                "tag": "tcp1",
+                "manner": "hex",
+                "opts": {
+                    "bytes": true,
+                    "auto_alive": false
+                }
+            },
+            {
+                "ip": "192.168.9.182",
+                "port": 5566,
+                "tag": "tcp2",
+                "manner": "json",
+                "opts": {
+                    "bytes": true,
+                    "auto_alive": false
+                }
+            }
+        ]
+    },
+    "localhost": {
+        "ts": {
+            "ip": "192.168.9.18",
+            "port": 10007,
+            "tag": "upper",
+            "manner": "hex",
+            "opts": {
+                "bytes": true
+            }
+        }
+    },
+    "commands": {
+        "0a 00 00 01": [
+            [
+                1,
+                0,
+                1,
+                0,
+                10,
+                0,
+                1
+            ],
+            [
+                {
+                    "act": "off",
+                    "type": "pc",
+                    "from": "admin",
+                    "nm": "pc1"
+                },
+                {
+                    "sender": "tcp2",
+                    "to": 129,
+                    "code": {
+                        "s": 1
+                    },
+                    "manner": "hex"
+                },
+                {
+                    "sender": "tpc1",
+                    "to": "192.168.9.10",
+                    "code": "00 00 02",
+                    "manner": "hex"
+                },
+                {
+                    "code": "00 001",
+                    "type": "dev",
+                    "nm": "admin",
+                    "it": "0702",
+                    "dev": "DevRed"
+                },
+                {
+                    "sender": "tcp3",
+                    "to": "192.168.9.10",
+                    "code": {
+                        "type": "meizi"
+                    },
+                    "manner": "json"
+                },
+                {
+                    "sender": "as",
+                    "to": 119,
+                    "code": "ddd",
+                    "manner": "hex"
+                },
+                {
+                    "code": "0a 00 00 01 ef",
+                    "type": "dev",
+                    "nm": "admin",
+                    "it": "0701",
+                    "dev": "DevRed"
+                }
+            ]
+        ],
+        "00 00 02": {
+            "tag": "07",
+            "port": "01",
+            "demand": "open",
+            "type": "emit",
+            "from": "admin",
+            "to": "upper",
+            "key": "light"
+        },
+        "00 00 003": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                {
+                    "code": "aa 01 01",
+                    "type": "dev",
+                    "nm": "admin",
+                    "it": "0701",
+                    "dev": "DevRed"
+                },
+                {
+                    "key": "video_show",
+                    "val": 1,
+                    "type": "emit",
+                    "from": "admin",
+                    "to": "v2"
+                },
+                {
+                    "val": 3,
+                    "to": "v2",
+                    "key": "image_show",
+                    "type": "emit",
+                    "from": "admin"
+                }
+            ]
+        ]
+    },
+    "human": {
+        "openall": [
+            [
+                1,
+                1,
+                1
+            ],
+            [
+                {
+                    "tag": "01",
+                    "port": "02",
+                    "demand": "open",
+                    "type": "emit",
+                    "from": "admin",
+                    "to": "upper",
+                    "key": "light"
+                },
+                {
+                    "code": "00 001",
+                    "type": "dev",
+                    "nm": "admin",
+                    "it": "0705",
+                    "dev": "DevRed"
+                },
+                {
+                    "sender": "tpc1",
+                    "to": "192.168.9.10",
+                    "code": {
+                        "deman": "open",
+                        "type": "machine"
+                    },
+                    "manner": "json"
+                }
+            ]
+        ],
+        "open": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                {
+                    "sender": "tcp1",
+                    "to": "192.168.9.10",
+                    "code": "00 00 02",
+                    "manner": "str"
+                },
+                {
+                    "val": "01",
+                    "to": "v1",
+                    "key": "image_show",
+                    "type": "emit",
+                    "from": "admin"
+                },
+                {
+                    "sender": "tcp3",
+                    "to": "192.168.9.10",
+                    "code": "dfsf",
+                    "manner": "str"
+                }
+            ]
+        ]
+    },
+    "request": {}
+}

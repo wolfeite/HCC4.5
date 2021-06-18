@@ -32,7 +32,14 @@
             white-space: nowrap;
             display: none;
         }
+
+        .view-body {
+            padding: 1.25rem;
+            border: 1px solid #ccc;
+            background-color: #F7F7F7;
+        }
     </style>
+    {% block optCss %}{% endblock %}
 {% endblock %}
 {% block content %}
     <!-- Main content -->
@@ -46,7 +53,7 @@
                 <div class="card-header p-0 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                         <li class="pt-2 px-3">
-                            <div class="input-group" style="max-width:300px;">
+                            <div class="input-group" style="max-width:500px;">
                                 <select class="form-control" id="exhibitor">
                                     <!--<option>option 123456789abcdefghijkmnropqrist</option>-->
                                 </select>
@@ -56,6 +63,7 @@
                                         内容
                                     </button>
                                 </div>
+                                {% block btns %}{% endblock %}
                             </div>
                             <!--
                              <div class="input-group-append">
@@ -86,29 +94,48 @@
         </div>
     </section>
     <!-- /.content -->
-    {% from "templates/operateModal.html" import addModal,updateModal,delModal %}
+    {% from "templates/operateModal.html" import modal %}
     {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
     {% macro formModal(prefix="_") %}
+
+        {% block optBefore %}{% endblock %}
+
         <form role="form" action="#" enctype="multipart/form-data" method="post">
             {{ hides(args=foreign,others=["id"]) }}
             <div class="card-body">
+                {% block optBtn %}{% endblock %}
                 {{ text(label="序号：",placeholder="示例：1", name="number" ) }}
                 {% block optDataForm %}{% endblock %}
             </div>
         </form>
+        {% block optAfter %}{% endblock %}
+
     {% endmacro %}
 
-    {% call addModal() %}
+    {% macro viewer(prefix="_") %}
+        {% block viewBefore %}{% endblock %}
+        <div class="view-body col-sm-12">
+            {% block viewBody %}{% endblock %}
+        </div>
+        {% block viewAfter %}{% endblock %}
+
+    {% endmacro %}
+
+    {% call modal("add","增加") %}
         {{ formModal("add_") }}
     {% endcall %}
-    {% call updateModal() %}
+    {% call modal("update","修改") %}
         {{ formModal("update_") }}
     {% endcall %}
-    {% call delModal() %}
+    {% call modal("del","删除","确定","bg-danger") %}
         <p>确定删除该信息？</p>
         <form role="form" action="#" enctype="multipart/form-data" method="post" style="display:none">
             {{ hides(args=foreign,others=["id"]) }}
         </form>
+    {% endcall %}
+
+    {% call modal("view","查看JSON",text="确定") %}
+        {{ viewer("view_") }}
     {% endcall %}
 
 {% endblock %}

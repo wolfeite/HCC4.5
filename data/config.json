@@ -1,107 +1,156 @@
 {
   "enter": "free",
   "title": {
-    "header": "中控指令系统",
-    "subhead": "指令控制_4.0",
+    "header": "指令控制系统",
+    "subhead": "控制器_4.0",
     "footer": "指令集"
   },
   "assets": {
     "path": "data",
     "db": "ccs.db",
     "host": "0.0.0.0",
-    "port": 5000
+    "port": 8888
   },
   "tables": {
-    "audio": {
-      "name": "screen",
+    "orders": {
+      "name": "orders",
       "column": {
         "name": "text",
-        "path": "text"
+        "ruler": "text"
       },
+      "foreign": "exhibit",
       "detail": [
         {
-          "name": "page_1",
+          "name": "rules",
           "column": {
             "name": "text",
-            "path": "text"
-          },
-          "deep": [
-            {
-              "name": "deep_1",
-              "column": {
-                "name": "text",
-                "path": "text"
-              },
-              "deep": {
-                "name": "deep_1_cld_1",
-                "column": {
-                  "name": "text",
-                  "path": "text"
-                },
-                "deep": [
-                  {
-                    "name": "deep_1_cld_1_cld_1",
-                    "column": {
-                      "name": "text",
-                      "path": "text"
-                    }
-                  },
-                  {
-                    "name": "deep_1_cld_1_cld_2",
-                    "column": {
-                      "name": "text",
-                      "path": "text"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "name": "deep_3",
-              "column": {
-                "name": "text",
-                "path": "text"
-              }
-            },
-            {
-              "name": "deep_4",
-              "column": {
-                "name": "text",
-                "path": "text"
-              }
-            }
-          ]
-        },
-        {
-          "name": "page_2",
-          "column": {
-            "name": "text",
-            "path": "text"
-          },
-          "deep": {
-            "name": "deep_2",
-            "column": {
-              "name": "text",
-              "path": "text"
-            }
+            "key": "text",
+            "value": "text"
           }
         }
       ]
     },
-    "red": {
-      "name": "red",
+    "sender": {
+      "name": "sender",
       "column": {
         "name": "text",
-        "path": "text"
+        "ruler": "text"
+      },
+      "detail": [
+        {
+          "name": "formats",
+          "column": {
+            "name": "text",
+            "key": "text",
+            "value": "text"
+          }
+        }
+      ]
+    },
+    "commands": {
+      "name": "commands",
+      "column": {
+        "name": "text",
+        "key": "text",
+        "value": "text"
+      },
+      "foreign": "exhibit",
+      "detail": [
+        {
+          "name": "items",
+          "column": {
+            "name": "text",
+            "delay": "text default 0",
+            "value": "text"
+          }
+        }
+      ]
+    },
+    "services": {
+      "name": "services",
+      "column": {
+        "name": "text",
+        "type": "text",
+        "modal": "text",
+        "ip": "text",
+        "port": "text",
+        "tag": "text",
+        "manner": "text",
+        "opts": "text",
+        "addition": "text"
       }
+    },
+    "app": {
+      "name": "app",
+      "column": {
+        "type": "text",
+        "name": "text",
+        "x": "text",
+        "y": "text",
+        "codes": "text"
+      },
+      "detail": [
+        {
+          "name": "display",
+          "column": {
+            "name": "text",
+            "delay": "text default 0",
+            "value": "text"
+          }
+        }
+      ]
     }
   },
   "routes": {
-    "audio": {
+    "commands": {
       "title": "指令配置",
+      "url": "/command",
+      "name": "command",
+      "item": [
+        {
+          "title": "外设信号",
+          "url": "/command/third"
+        },
+        {
+          "title": "中控信号",
+          "url": "/command/iot"
+        }
+      ],
+      "index": "command/index.html",
+      "detail": "command/detail.html"
+    },
+    "services": {
+      "title": "服务应用",
+      "url": "/services",
+      "name": "services",
+      "item": [
+        {
+          "title": "服务器",
+          "url": "/services/server"
+        },
+        {
+          "title": "客户端",
+          "url": "/services/client"
+        }
+      ],
+      "index": "services/index.html"
+    },
+    "app": {
+      "title": "测试按钮",
+      "url": "/app",
+      "name": "app",
+      "index": "app/index.html",
+      "detail": "app/detail.html"
+    },
+    "orderJson/commands": {
+      "title": "生成JSON",
+      "url": "#"
+    },
+    "orders": {
+      "title": "中控指令",
       "url": "/order",
       "name": "order",
-      "index": "order/index.html",
+      "sep_before": "指令模板:",
       "item": [
         {
           "title": "继电器",
@@ -109,31 +158,36 @@
         },
         {
           "title": "红外/串口",
-          "url": "/order/com",
-          "table": "red"
+          "url": "/order/com"
         },
         {
           "title": "PC",
           "url": "/order/pc"
+        },
+        {
+          "title": "视频",
+          "url": "/order/video"
+        },
+        {
+          "title": "图片",
+          "url": "/order/image"
+        },
+        {
+          "title": "通知外设",
+          "url": "/order/inform"
         }
       ],
+      "index": "order/index.html",
       "detail": {
-        "page_1": "order/detail.html",
-        "page_2": "order/detail.html"
-      },
-      "deep": {
-        "deep_1_cld_1": "order/deep2.html",
-        "deep_1_cld_1_cld_1": "order/deep3.html",
-        "deep_1_cld_1_cld_2": "order/deep3.html"
+        "rules": "order/detail.html"
       }
     },
-    "moveTo/screen/data/mp3": {
-      "title": "更新",
-      "url": "#"
-    },
-    "toJson": {
-      "title": "同步",
-      "url": "#"
+    "sender": {
+      "title": "外设指令",
+      "url": "/sender",
+      "name": "sender",
+      "index": "order/index.html",
+      "detail": "order/detail.html"
     }
   }
 }

@@ -1,4 +1,4 @@
-function combine(cols, options = {}) {
+function combine(cols, options = {}, url_params = {}) {
     var infoEl = $("#infoEl"), prefix = infoEl.attr("path"), foreign = eval("(" + infoEl.attr("foreign") + ")");
     var tableName = infoEl.attr("table_name"), related = infoEl.attr("related"),
         relatedName = infoEl.attr("related_name"), rootPrefix = prefix, detailName = "detail",
@@ -76,9 +76,14 @@ function combine(cols, options = {}) {
     }
 
     //4.操作按钮控制
-    var detailFn = function (item, chd) {
+    var detailFn = function (item, chd, exhibitVal) {
         var id = item.id, name = item.name ? item.name : id
-        return rootPrefix + detailName + "?id=" + id + "&name=" + name + "&child=" + chd
+        var detail_url = rootPrefix + detailName + "?id=" + id + "&name=" + name + "&child=" + chd + (exhibitVal ? "&exhibit=" + exhibitVal : "")
+        let other = url_params.detail ? url_params.detail : {}
+        for (let k in other) {
+            detail_url += k == "item" ? "&" + other[k] + "=" + item[other[k]] : "&" + k + "=" + other[k]
+        }
+        return detail_url
     }
 
     isDetail = isDetail == "True" ? true : false
@@ -105,5 +110,5 @@ function combine(cols, options = {}) {
         add: {}, update: {}, del: {}, pops: [], text: {}, btn: {}
     }, options) : {}
     opts.children = children
-    createCommon(tagCols, url, params, opt_btn, opts)
+    return createCommon(tagCols, url, params, opt_btn, opts)
 }

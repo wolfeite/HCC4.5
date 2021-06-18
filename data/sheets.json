@@ -9,33 +9,23 @@
     "data": [
       {
         "number": 1,
-        "type": "screen",
-        "name": "默认展示"
+        "type": "orders",
+        "name": "中控4.0"
       },
       {
         "number": 2,
-        "type": "screen",
-        "name": "展示类1"
-      },
-      {
-        "number": 3,
-        "type": "screen",
-        "name": "展示类2"
+        "type": "orders",
+        "name": "中控4.5"
       },
       {
         "number": 1,
-        "type": "detail",
-        "name": "详情类1"
+        "type": "commands",
+        "name": "指令4.0"
       },
       {
         "number": 2,
-        "type": "detail",
-        "name": "详情类2"
-      },
-      {
-        "number": 1,
-        "type": "third",
-        "name": "另类1"
+        "type": "commands",
+        "name": "指令4.5"
       }
     ]
   }

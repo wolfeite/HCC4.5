@@ -1,34 +1,50 @@
-{% extends "web/temp/order.html" %}
+{% extends "web/template/regular.html" %}
+{% block optCss %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/json-viewer/jquery.json-viewer.css') }}">
+    <style></style>
+{% endblock %}
+
+{% block viewBefore %}
+    <h3 id="cmdTitle"></h3>
+{% endblock %}
+
 {% block optDataForm %}
-    {% from "templates/input.html" import hides,text,textarea ,file_img,file_video,file_audio,file_app %}
-    {{ text(label="名称：",placeholder="示例：欢迎", name="name") }}
+    {% from "templates/input.html" import input,hides,text,textarea ,file_img,file_video,file_audio,file_app %}
+    {{ text(label="名称：",placeholder="示例：type", name="name") }}
     {#    {{ file_audio(label="音频：",placeholder="请选择音频", name="path",accept="audio/wav" ) }}#}
-    {{ file_app(label="pdf：",placeholder="请选择pdf", name="path" ) }}
+    {{ input(placeholder="示例：emit", name="ruler",type="hidden") }}
+    {#    {{ file_app(label="pdf：",placeholder="请选择pdf", name="ruler" ) }}#}
 {% endblock %}
 {% block optJs %}
+    <script src="{{ url_for('static',filename='plugins/json-viewer/jquery.json-viewer.js') }}"></script>
     <script>
-        combine([
+        var viewer = $("#viewModalBtn"), viewOpt = $("#viewOpt");
+        var options = {collapsed: false, withQuotes: false}, cmdTitle = $("#cmdTitle")
+
+        viewOpt.on("click", function () {
+            $("#viewOptClose").trigger("click")
+        })
+
+        var grid = combine([
+            {name: "id", visible: true, "title": "标识", align: "center"},
+            {name: "name", type: "text", width: 100, align: "center", title: "名称"},
             {
-                name: "id", visible: true, "title": "标识", align: "center", itemTemplate: function (value, item) {
-                    return value + ".wav"
-                }
-            },
-            {name: "name", type: "text", width: 50, align: "center", title: "名称"},
-            {
-                name: "path", type: "text", width: 100, align: "center", title: "音频",
+                name: "ruler", type: "text", width: 200, align: "center", title: "规则",
                 itemTemplate: function (value, item) {
-                    return value ? '<a href="' + $.url_for("other/" + value) + '" name="preApp">查看</a>' : "无"
-                    {#return value ? '<audio src="' + $.url_for("audio/" + value) + '" controls="controls" style="width:100%;height:50px;"></audio>' : "无"#}
-                    //return value ? '<video src="' + $.url_for("video/" + value) + '" controls="controls" style="width:100%;height:80px;"></video>' : "无"
+                    return value ? $('<a href="javascript:0;"><i class="fas fa-eye"></i>查看</a>').on("click", function (e) {
+                        cmdTitle.html(item.name + ":")
+                        var val = JSON.parse(value)
+                        $('#viewModal .view-body').jsonViewer(val, options);
+                        viewer.trigger("click")
+                    }) : "无"
                 }
             }
         ], {
             text: {
                 detail: {
-                    "page_1": "dsdssds",
-                    "page_2": "内页123"
+                    "rules": "配置"
                 }
             }
-        })
+        }, url_params = {"detail": {"path": $.parseUrl()[1], "item": "name"}})
     </script>
 {% endblock %}

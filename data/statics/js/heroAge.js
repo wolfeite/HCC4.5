@@ -88,6 +88,18 @@
             if (r != null) return unescape(r[2]);
             return null;
         },
+        parseUrl: function () {
+            //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+            var curWwwPath = window.document.location.href;
+            //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+            var pathName = window.document.location.pathname;
+            var pos = curWwwPath.indexOf(pathName);
+            //获取主机地址，如： http://localhost:8083
+            var localhostPath = curWwwPath.substring(0, pos);
+            //获取带"/"的项目名，如：/uimcardprj
+            var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+            return [localhostPath, pathName, projectName];
+        },
         alertInfo: function (info, el, type, expire = 2000) {
             var style = type === 'error' ? 'alert-danger' : 'alert-success';
             var str = '<div id="alert" class="alert ' + style + ' fade show" role="alert">' + info + '</div>'
@@ -106,6 +118,26 @@
         }(),
         pattern: function () {
             return $("body").attr("pattern");
+        },
+        str2json: function (str) {
+            if (str == "" || str == " " || str == null || $.type(str) === "number") {
+                //Number("") 为0
+                return str
+            }
+            let isNum = isNaN(Number(str)) ? false : str.startsWith("0") && str !== "0" ? false : true;
+            let isStr = !isNum && !((str.startsWith("{") && str.endsWith("}")) || (str.startsWith("[") && str.endsWith("]")))
+            if (isStr) {
+                return str
+            }
+            var res = ""
+            try {
+                res = eval('(' + str + ')');
+            } catch (error) {
+                res = str
+                console.log("Cannot eval JSON: " + error)
+                //return alert("Cannot eval JSON: " + error);
+            }
+            return res
         }
     })
 

@@ -51,10 +51,11 @@ class ViewModel(View):
                 clauseWhere = []
                 for name in byNames:
                     val = self.get(name)
-                    strCal = "{0}='{1}'" if isinstance(val, str) else "{0}={1}"
-                    clauseWhere.append(strCal.format(name, val))
+                    if val:
+                        strCal = "{0}='{1}'" if isinstance(val, str) else "{0}={1}"
+                        clauseWhere.append(strCal.format(name, val))
                 clause = " and ".join(clauseWhere)
-                orderBy = "where {0} {1}".format(clause, orderBy)
+                orderBy = orderBy if not clause else "where {0} {1}".format(clause, orderBy)
         res = self.model.find(fields, clause=orderBy)
         print("findBy{0}>>查询条件：{1}，结果：{2}".format(byNames, orderBy, res))
         return res

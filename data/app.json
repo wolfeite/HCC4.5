@@ -1,0 +1,52 @@
+{
+    "btns": [
+        {
+            "id": 1,
+            "number": 1,
+            "route": "/app/",
+            "type": "1",
+            "name": "测试按钮1",
+            "x": "200",
+            "y": "200",
+            "codes": [
+                {
+                    "tag": "01",
+                    "port": "08",
+                    "demand": "open",
+                    "type": "emit",
+                    "from": "admin",
+                    "to": "upper",
+                    "key": "light",
+                    "code_delay": 1
+                },
+                {
+                    "code": "00 00 02",
+                    "type": "dev",
+                    "nm": "admin",
+                    "it": "0702",
+                    "dev": "DevRed",
+                    "code_delay": 1
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "number": 2,
+            "route": "/app/",
+            "type": "3",
+            "name": "测试2",
+            "x": "1",
+            "y": "1",
+            "codes": [
+                {
+                    "demand": "openall",
+                    "key": "human",
+                    "type": "emit",
+                    "from": "admin",
+                    "to": "viewer",
+                    "code_delay": 0
+                }
+            ]
+        }
+    ]
+}

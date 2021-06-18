@@ -1,0 +1,268 @@
+{% extends "templates/layout.html" %}
+{% block css %}
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/ionicons.min.css') }}">
+    {#    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/json-viewer/bootstrap-3.3.4.css') }}">#}
+    <link rel="stylesheet" href="{{ url_for('static',filename='plugins/json-viewer/jquery.json-viewer.css') }}">
+
+    <style>
+        .pt-2, .py-2 {
+            padding-top: .2rem !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ced4da;
+        }
+
+        .pt-2.px-3 .input-group {
+            display: flex;
+            flex-direction: row;
+            max-width: 200px;
+            min-width: 60px;
+        }
+
+        #exhibitor {
+            height: 2rem;
+            padding: 0 .75rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            display: none;
+        }
+
+        pre {
+            display: block;
+            padding: 9.5px;
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+            word-break: break-all;
+            word-wrap: break-word;
+        {#background-color: #f5f5f5;#} border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #F7F7F7;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+        <div id="infoEl" style="display:none;" info="{{ get_flashed_messages(category_filter=type)[0] }}"
+             path="{{ path }}" foreign="{{ foreign if foreign else [] }}" table_name="{{ tableName }}"
+             related_name="{{ relatedName }}" related="{{ related }}" template="{{ template }}"
+             is_detail="{{ isDetail }}" children="{{ children }}"></div>
+        <div class="col-12 col-sm-12">
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                        <li class="pt-2 px-3">
+                            <div class="input-group" style="max-width:300px;">
+                                <select class="form-control" id="exhibitor">
+                                    <!--<option>option 123456789abcdefghijkmnropqrist</option>-->
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-block btn-default btn-sm" id="addBtn"
+                                            data-toggle="modal" data-target="#addModal"><i class="fas fa-plus"></i>
+                                        内容
+                                    </button>
+                                </div>
+                            </div>
+                            <!--
+                             <div class="input-group-append">
+                               <button type="button" class="btn btn-block btn-default btn-sm" id="addBtn"
+                                       data-toggle="modal" data-target="#addModal"><i class="fas fa-plus"></i>
+                                   内容
+                               </button>
+                           </div>
+                             -->
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill"
+                               href="#custom-tabs-four-home" role="tab" aria-controls="screen"
+                               aria-selected="true">列表</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                        <div class="tab-pane fade show active" id="screen" role="tabpanel"
+                             aria-labelledby="custom-tabs-four-home-tab">
+                            <div class="jq22-container">
+                                <div class="container" style="margin-top: 1em;">
+                                    <div class="row">
+      <textarea class="form-control" id="json-input" rows="15">
+{
+  "id": 1001,
+  "type": "donut",
+  "name": "Cake",
+  "description": "http://www.jq22.com",
+  "price": 2.55,
+  "available": {
+    store: 42,
+    warehouse: 600
+  },
+  "topping": [
+    { "id": 5001, "type": "None" },
+    { "id": 5002, "type": "Glazed" },
+    { "id": 5005, "type": "Sugar" },
+    { "id": 5003, "type": "Chocolate" },
+    { "id": 5004, "type": "Maple" }
+  ]
+}
+				</textarea>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="collapsed">
+                                            收缩所有的节点 </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="with-quotes">
+                                            为Key添加双引号 </label>
+                                        <div class="form-group" style="padding: 1em 0;">
+                                            <button id="btn-json-viewer" class="btn btn-info"
+                                                    title="run jsonViewer()">转换Json数据
+                                            </button>
+                                        </div>
+                                        <pre id="json-renderer"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+    {% from "templates/operateModal.html" import addModal,updateModal,delModal ,jsonModal %}
+    {% from "templates/input.html" import hides,text,textarea ,file_img,file_video %}
+    {% macro formModal(prefix="_") %}
+        <form role="form" action="#" enctype="multipart/form-data" method="post">
+            {{ hides(args=foreign,others=["id"]) }}
+            <div class="card-body">
+                {% block optBtn %}{% endblock %}
+                {{ text(label="序号：",placeholder="示例：1", name="number" ) }}
+                {% block optDataForm %}{% endblock %}
+            </div>
+        </form>
+    {% endmacro %}
+
+    {% call addModal() %}
+        {{ formModal("add_") }}
+    {% endcall %}
+    {% call updateModal() %}
+        {{ formModal("update_") }}
+    {% endcall %}
+    {% call delModal() %}
+        <p>确定删除该信息？</p>
+        <form role="form" action="#" enctype="multipart/form-data" method="post" style="display:none">
+            {{ hides(args=foreign,others=["id"]) }}
+        </form>
+    {% endcall %}
+    {% call jsonModal() %}
+        {{ formModal("json_") }}
+    {% endcall %}
+
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static',filename='plugins/json-viewer/jquery.json-viewer.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            var input = eval('(' + $('#json-input').val() + ')');
+            $('#btn-json-viewer').click(function () {
+                try {
+                    input = eval('(' + $('#json-input').val() + ')');
+                } catch (error) {
+                    return alert("Cannot eval JSON: " + error);
+                }
+                var options = {
+                    collapsed: $('#collapsed').is(':checked'),
+                    withQuotes: $('#with-quotes').is(':checked')
+                };
+                $('#json-renderer').jsonViewer(input, options);
+            });
+
+            // Display JSON sample on load
+            $('#btn-json-viewer').click();
+
+            var jsonForm = $("#jsonModal form")
+            var jsonBtn_save = $("#jsonOpt").click(function (e) {
+                var p = $(this).attr("parents")
+                if (p) {
+                    var pstr = p.split(".")
+                    var inputRes = input
+                    for (var j in pstr) {
+                        inputRes = inputRes[pstr[j]]
+                    }
+                    var changeKeys = []
+                    for (var k in inputRes) {
+                        var val = inputRes[k]
+                        var $i = jsonForm.find("[name='" + k + "'][type!='hidden']")
+                        var $val = jsonForm.find("[name='" + val + "'][type!='hidden']")
+                        var keyStr = $i.val()
+                        if (keyStr != k) {
+                            changeKeys.push(k)
+                            k = keyStr
+                        }
+                        inputRes[k] = $val.val()
+                    }
+                    for (var z in changeKeys) {
+                        delete inputRes[changeKeys[z]]
+                    }
+                    $('#json-renderer').jsonViewer(input, {collapsed: false, withQuotes: false});
+
+                }
+
+
+            })
+            var jsonBtn = $("#jsonModalBtn").click(function (e, a, p) {
+
+
+                var res = ''
+                for (var i = 0; i < a.length; i++) {
+                    var key = a[i][0], val = a[i][1]
+                    var str = '<div class="form-group row">' +
+                        {#'<label class="col-sm-3 col-form-label">key：</label>' +#}
+                        '<div class="col-sm-3">' +
+                        '<input type="text" class="form-control"placeholder="请输入" value="' + key + '" name="' + key + '">' +
+                        '</div>' +
+                        '<label class="col-sm-1 col-form-label">：</label>' +
+                        '<div class="col-sm-8">' +
+                        '<input type="text" class="form-control"placeholder="请输入" value="' + val + '" name="' + val + '">' +
+                        '</div>' +
+                        '</div>'
+                    res += str
+                }
+                $("#jsonModal form>.card-body").html(res)
+                jsonBtn_save.attr("parents", p)
+            })
+            $('#json-renderer').on("click", ">ul>li,li ul", function (e) {
+                e.stopPropagation()
+                var parent = $(this), tar = $(e.target)
+                var p = parent.attr("parents")
+                var res = []
+                if (p) {
+                    var pstr = p.split(".")
+                    //var tar_input = input[pstr[0]][pstr[1]]
+                    var inputRes = input
+                    for (var j in pstr) {
+                        inputRes = inputRes[pstr[j]]
+                    }
+                    for (var k in inputRes) {
+                        res.push([k, inputRes[k]])
+                    }
+
+                } else {
+                    res = [[parent.attr("key"), parent.attr("val")]]
+                }
+                {#console.log(this, e.target)#}
+                {#console.log(p)#}
+                jsonBtn.trigger("click", [res, p ? p : ""])
+            })
+        });
+    </script>
+    {% block optJs %}{% endblock %}
+{% endblock %}
